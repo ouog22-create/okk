@@ -1,10 +1,49 @@
 <!doctype html>
 <html lang="ko">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#004EEA"><meta name="description" content="STUDIO OKK — 젊고 유쾌한 감각으로 만드는 새로운 장면."><title>STUDIO OKK — A little different. A lot of fun.</title><link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script></head>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#004EEA">
+    <meta name="description" content="STUDIO OKK — 젊고 유쾌한 감각으로 만드는 새로운 장면.">
+    <title>STUDIO OKK — A little different. A lot of fun.</title>
+    <link rel="stylesheet" href="./style.css">
+    <script src="./app.js" defer></script>
+</head>
+
 <body>
-<a class="skip" href="#main">본문으로 이동</a>
-<header><a class="brand" href="/" aria-label="STUDIO OKK 홈">studio <b>okk<span class="brand-star">✳</span></b></a><nav aria-label="주 메뉴"><a href="/about">Studio</a><a href="/works">Works <span class="nav-dot"></span></a><button data-contact>Let’s talk <span>↗</span></button></nav></header>
-<main id="main" tabindex="-1"></main>
-<footer><a class="footer-logo" href="/">studio okk<span>®</span></a><div>© <span id="year"></span> STUDIO OKK</div><button data-contact>Say hello ↗</button><a href="#" data-top aria-label="맨 위로">↑</a></footer>
-<dialog id="contact" aria-labelledby="contact-title"><div class="window-bar"><span>● &nbsp; STUDIO OKK / NEW MESSAGE</span><button class="close" aria-label="문의창 닫기">×</button></div><div class="dialog-content"><span class="eyebrow">GOOD THINGS START WITH A HELLO</span><h2 id="contact-title">Let’s talk<span>↗</span></h2><p>함께 만들고 싶은 이야기를 들려주세요.</p><form novalidate><div class="form-grid"><label>회사명 <span>*</span><input name="company" autocomplete="organization" maxlength="100" required><small class="error"></small></label><label>담당자명 <span>*</span><input name="name" autocomplete="name" maxlength="100" required><small class="error"></small></label><label>연락처 <span>*</span><input name="phone" type="tel" autocomplete="tel" maxlength="40" required><small class="error"></small></label><label>이메일 <span>*</span><input name="email" type="email" autocomplete="email" maxlength="254" required><small class="error"></small></label></div><label>요청사항 <span>*</span><textarea name="message" rows="4" maxlength="5000" placeholder="프로젝트에 대해 자유롭게 적어주세요." required></textarea><small class="error"></small></label><p class="form-note">입력하신 정보는 문의 확인과 답변을 위해 이메일로 전달됩니다.</p><p id="form-status" role="status" aria-live="polite"></p><button class="submit" type="submit">접수하기 <span>↗</span></button></form></div></dialog>
-</body></html>
+    <a class="skip" href="#main">본문으로 이동</a>
+    <header><a class="brand" href="/" aria-label="STUDIO OKK 홈">studio <b>okk<span class="brand-star">✳</span></b></a>
+        <nav aria-label="주 메뉴"><a href="/about">Studio</a><a href="/works">Works <span
+                    class="nav-dot"></span></a><button data-contact>Let’s talk <span>↗</span></button></nav>
+    </header>
+    <main id="main" tabindex="-1"></main>
+    <footer><a class="footer-logo" href="/">studio okk<span>®</span></a>
+        <div>© <span id="year"></span> STUDIO OKK</div><button data-contact>Say hello ↗</button><a href="#" data-top
+            aria-label="맨 위로">↑</a>
+    </footer>
+    <dialog id="contact" aria-labelledby="contact-title">
+        <div class="window-bar"><span>● &nbsp; STUDIO OKK / NEW MESSAGE</span><button class="close"
+                aria-label="문의창 닫기">×</button></div>
+        <div class="dialog-content"><span class="eyebrow">GOOD THINGS START WITH A HELLO</span>
+            <h2 id="contact-title">Let’s talk<span>↗</span></h2>
+            <p>함께 만들고 싶은 이야기를 들려주세요.</p>
+            <form novalidate>
+                <div class="form-grid"><label>회사명 <span>*</span><input name="company" autocomplete="organization"
+                            maxlength="100" required><small class="error"></small></label><label>담당자명
+                        <span>*</span><input name="name" autocomplete="name" maxlength="100" required><small
+                            class="error"></small></label><label>연락처 <span>*</span><input name="phone" type="tel"
+                            autocomplete="tel" maxlength="40" required><small class="error"></small></label><label>이메일
+                        <span>*</span><input name="email" type="email" autocomplete="email" maxlength="254"
+                            required><small class="error"></small></label></div><label>요청사항 <span>*</span><textarea
+                        name="message" rows="4" maxlength="5000" placeholder="프로젝트에 대해 자유롭게 적어주세요."
+                        required></textarea><small class="error"></small></label>
+                <p class="form-note">입력하신 정보는 문의 확인과 답변을 위해 이메일로 전달됩니다.</p>
+                <p id="form-status" role="status" aria-live="polite"></p><button class="submit" type="submit">접수하기
+                    <span>↗</span></button>
+            </form>
+        </div>
+    </dialog>
+</body>
+
+</html>
