@@ -13,14 +13,14 @@ const works = [
 ];
 const packageColors = ['#df76a9', '#a2bf43', '#54b5d6', '#a897d4', '#e99761', '#72b9ae'];
 function packageFigure(kind, back = false) {
-    if (kind === 'monkey') return `<img class="package-monkey" src="/b/assets/okkimong-cutout.png" alt="오키몽" onerror="this.onerror=null;this.src='/assets/okkimong-poster.jpg'">`;
-    return `<div class="package-okk ${back ? 'back-view' : ''}"><div class="slot-sprite" role="img" aria-label="오키키${back ? ' 뒷모습' : ''}"></div><img class="slot-image" src="/assets/okk-poster.jpg" alt="오키키" loading="lazy"></div>`;
+    if (kind === 'monkey') return `<img class="package-monkey" src="/okk/b/assets/okkimong-cutout.png" alt="오키몽" onerror="this.onerror=null;this.src='/okk/assets/okkimong-poster.jpg'">`;
+    return `<div class="package-okk ${back ? 'back-view' : ''}"><div class="slot-sprite" role="img" aria-label="오키키${back ? ' 뒷모습' : ''}"></div><img class="slot-image" src="/okk/assets/okk-poster.jpg" alt="오키키" loading="lazy"></div>`;
 }
 $('#work-grid').innerHTML = works.map((w, i) => `<article class="work-slot" style="--pack-accent:${packageColors[i]}"><div class="toy-package"><div class="package-label"><span class="hang-tab"></span><strong>OKK! FRIENDS</strong><b class="package-number" aria-hidden="true">${String(i + 1).padStart(2, '0')}</b><span class="package-edition">ORIGINAL</span><span class="package-series">✦ CHARACTER COLLECTION</span></div><div class="slot-stage"><div class="package-art ${i === 2 || i === 5 ? 'duo' : ''} variant-${i}">${i === 1 || i === 4 ? packageFigure('monkey') : i === 2 || i === 5 ? packageFigure('okk') + packageFigure('monkey') : packageFigure('okk', i === 3)}</div><div class="package-caption"><b>${w.title}</b><span>STUDIO OKK ORIGINAL</span></div></div></div><div class="slot-info"><button class="select-work" data-project="${w.id}" aria-label="상세 보기" aria-haspopup="dialog"><span>상세 보기</span></button></div></article>`).join('');
 const logos = [['1', 'peripera'], ['2', 'NHR'], ['3', 'the SMC GROUP'], ['4', 'SUNSOFT'], ['5', 'oVice'], ['6', 'Finset N'], ['7', 'heaventree'], ['8', '울산광역정신건강복지센터'], ['9', '대구대학교 산학협력단'], ['10', 'MVM'], ['sk', 'SK'], ['Artygen', 'Artygen Space'], ['사회평론', '사회평론'], ['앳홈', 'ATHOME'], ['망고', 'MANGO board']];
-$('#logos').innerHTML = logos.map(([file, name]) => `<img src="/assets/${encodeURIComponent(file)}.png" alt="${name}" width="105" height="42" loading="lazy">`).join('');
+$('#logos').innerHTML = logos.map(([file, name]) => `<img src="/okk/assets/${encodeURIComponent(file)}.png" alt="${name}" width="105" height="42" loading="lazy">`).join('');
 $('#year').textContent = new Date().getFullYear();
-const sprite = new Image(); sprite.onload = () => document.body.classList.add('sprite-ready'); sprite.src = '/b/assets/okk-rotation.png';
+const sprite = new Image(); sprite.onload = () => document.body.classList.add('sprite-ready'); sprite.src = '/okk/b/assets/okk-rotation.png';
 const track = $('.hero-track'), stage = $('.hero-stage'), studio = $('#studio'), character = $('.hero-character');
 const clamp = (n, a = 0, b = 1) => Math.max(a, Math.min(b, n));
 const ease = p => p * p * (3 - 2 * p);
@@ -84,7 +84,7 @@ function openProject(id, record = true) {
     const w = works.find(w => w.id === id); if (!w) return;
     projectOpener = $(`[data-project="${id}"]`);
     projectY = scrollY;
-    $('#project-content').innerHTML = `<div class="project-heading"><span class="eyebrow">${w.code} / STUDIO OKK ORIGINAL</span><h2 id="project-title">${w.title}</h2><p>${w.en}</p></div><img class="project-art" src="/assets/${w.image}" alt="${w.title} 포스터"><div class="project-description"><h3>Meet our friend.</h3><p>${w.copy}</p>${w.turnaround ? `<img src="/assets/${w.turnaround}" alt="${w.title} 정면, 측면, 후면 설정" loading="lazy">` : ''}</div>`;
+    $('#project-content').innerHTML = `<div class="project-heading"><span class="eyebrow">${w.code} / STUDIO OKK ORIGINAL</span><h2 id="project-title">${w.title}</h2><p>${w.en}</p></div><img class="project-art" src="/okk/assets/${w.image}" alt="${w.title} 포스터"><div class="project-description"><h3>Meet our friend.</h3><p>${w.copy}</p>${w.turnaround ? `<img src="/okk/assets/${w.turnaround}" alt="${w.title} 정면, 측면, 후면 설정" loading="lazy">` : ''}</div>`;
     if (record) history.pushState({ project: id, returnY: scrollY }, '', `#work-${id}`);
     if (!project.open) project.showModal(); project.scrollTop = 0; document.body.classList.add('modal-open'); $('.project-close').focus();
 }
