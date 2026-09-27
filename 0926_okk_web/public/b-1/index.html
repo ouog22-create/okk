@@ -6,46 +6,68 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="theme-color" content="#004eea">
     <meta name="description" content="즐거운 상상을, 오래 기억될 캐릭터로. STUDIO OKK">
-    <title>STUDIO OKK — Blue Playground</title>
+    <title>STUDIO OKK — B-1 / Play with OKK</title>
+    <link rel="stylesheet" href="../b/style.css">
     <link rel="stylesheet" href="./style.css">
     <script src="./app.js" defer></script>
+    <script src="./playground.js" defer></script>
 </head>
 
-<body><a class="skip" href="#works">작업으로 바로 이동</a>
-    <header class="header"><a class="brand" href="#home"
-            aria-label="STUDIO OKK 홈"><small>STUDIO</small><b>OKK</b></a><button class="menu-toggle"
-            aria-expanded="false" aria-controls="navigation">메뉴 <span>＋</span></button>
-        <nav id="navigation" aria-label="주 메뉴"><a href="#studio">Studio</a><a href="#works">Works</a><a
-                href="#clients">Clients</a><a class="nav-contact" href="#contact">Let’s talk ↗</a></nav>
+<body class="b-one"><a class="skip" href="#works">작업으로 바로 이동</a>
+    <header class="header">
+        <a class="edition-link" href="../b/" aria-label="기존 B안 보기">BLUE PLAYGROUND <span>／ B–1</span></a>
+        <button class="menu-toggle" aria-expanded="false" aria-controls="navigation">메뉴 <span>＋</span></button>
+        <nav id="navigation" aria-label="주 메뉴"><a href="#studio">Studio</a><a href="#works">Works</a><a href="#clients">Clients</a><a class="nav-contact" href="#contact">Let’s talk ↗</a></nav>
     </header>
     <main id="main">
         <div class="page-scene">
-        <section id="home" class="hero-track" aria-label="STUDIO OKK 캐릭터 놀이터">
-            <div class="hero-stage">
-                <div class="sky-light"></div>
-                <div class="cloud cloud-one" aria-hidden="true"></div>
-                <div class="cloud cloud-two" aria-hidden="true"></div>
-                <div class="cloud cloud-three" aria-hidden="true"></div>
-                <div class="hero-copy">
-                    <p class="eyebrow">A LITTLE DIFFERENT. A LOT OF FUN.</p>
-                    <h1><span>MAKE</span><span>SOMETHING</span><span class="last-word">OKK!</span></h1>
-                </div>
-                <div class="note note-yellow" aria-hidden="true">GOOD IDEAS.<br>GREAT FRIENDS.<span>⤴</span></div>
-                <div class="star-sticker" aria-hidden="true">100%<br>PLAYFUL!</div><span class="doodle d2" aria-hidden="true">♡</span>
-                <div class="hero-character" role="img" aria-label="파란 비니를 쓴 오키키가 정면에서 후면으로 회전합니다">
-                    <div class="character-sprite"></div><img class="character-fallback" src="../assets/okk-poster.jpg"
-                        alt="" fetchpriority="high">
-                </div>
-                <article id="studio" class="studio-copy" tabindex="-1">
-                    <p class="eyebrow">ABOUT</p>
-                    <h2>Hello,<br>We are<br><em>Studio Okk</em></h2>
-                    <p class="body-copy">조금 다른 시선과 유쾌한 상상으로<br>브랜드의 이야기에 생명을 불어넣습니다.<br>작은 아이디어가 특별한 친구가 되는 곳,<br>여기는
-                        스튜디오 오키키입니다.</p>
-                </article>
-                <div class="hero-bottom"><span>CHARACTERS WITH PERSONALITY.<br>STORIES WITH POSSIBILITY.</span><a
-                        href="#studio">SCROLL TO MEET US <b>↓</b></a><span>SEOUL, KR<br>LET’S MAKE SOMETHING OKK!</span>
-                </div>
+        <section id="home" class="play-hero" aria-labelledby="play-title">
+            <div class="play-sky" aria-hidden="true">
+                <div class="cloud play-cloud c-left"></div><div class="cloud play-cloud c-right"></div>
+                <div class="cloud play-cloud c-small"></div>
+                
             </div>
+            <div class="play-heading">
+                <p class="eyebrow">A LITTLE DIFFERENT. A LOT OF FUN.</p>
+                <a class="play-logo" href="#home" aria-label="STUDIO OKK 홈"><h1 id="play-title"><span>STUDIO</span><strong>OKK<span class="logo-bang">!</span></strong></h1></a>
+                <p class="play-tagline">좋은 상상은, 신나게 노는 것부터.</p>
+            </div>
+            <div class="play-scenery" aria-hidden="true">
+                <div class="play-hill hill-back"></div><div class="play-hill hill-left"></div><div class="play-hill hill-right"></div>
+                <div class="play-tree tree-left"><i></i><i></i><i></i></div>
+                <div class="play-tree tree-right"><i></i><i></i><i></i></div>
+                <div class="play-floor"></div>
+                
+                <div class="world-sign">GOOD IDEAS<br><b>START WITH PLAY.</b><span>↗</span></div>
+            </div>
+            <div class="playground" data-character="okk" tabindex="0" role="region" aria-label="오키키 캐릭터 놀이터" aria-describedby="play-instructions">
+                <div class="play-world">
+                    <span class="play-spark" data-spark="0" aria-hidden="true">✦</span>
+                    <span class="play-spark" data-spark="1" aria-hidden="true">✦</span>
+                    <span class="play-spark" data-spark="2" aria-hidden="true">✦</span>
+                    <div class="player-shadow" aria-hidden="true"></div>
+                    <div class="play-player" role="img" aria-label="직접 움직이는 오키키">
+                        <div class="player-art"><img class="player-monkey" src="../b/assets/okkimong-cutout.png" alt=""><div class="player-sprite"></div><img class="player-fallback" src="../assets/okk-poster.jpg" alt="" fetchpriority="high"></div>
+                        <span class="player-label">YOU <b>↓</b></span>
+                    </div>
+                    <button type="button" class="play-friend" aria-label="오키몽으로 변경"><span>나로 바꿔볼래?</span><img class="friend-monkey" src="../b/assets/okkimong-cutout.png" alt="오키몽"><span class="friend-okk-art" aria-hidden="true"><span class="friend-sprite"></span><img class="friend-okk-fallback" src="../assets/okk-cutout.png" alt=""></span></button>
+                </div>
+                <div class="play-ui">
+                    <div class="play-help"><span class="play-live-dot"></span><b>PLAY WITH OKK</b><p id="play-instructions">← → / A D 이동 · SPACE 점프<br> 놀이터를 클릭하거나 터치해 이동해보세요.</p></div>
+                    <div class="play-controls" aria-label="캐릭터 조작">
+                        <button type="button" data-move="-1" aria-label="왼쪽으로 이동">←</button>
+                        <button type="button" data-move="1" aria-label="오른쪽으로 이동">→</button>
+                        <button type="button" class="jump-button" data-jump aria-label="점프">JUMP <span>↑</span></button>
+                    </div>
+                    <div class="play-score"><span aria-hidden="true">✦</span> <output id="play-score" aria-label="모은 별">0 / 3</output><button type="button" class="play-reset" aria-label="놀이터 다시 시작">↺</button></div>
+                </div>
+                <p id="play-status" class="sr-only" role="status" aria-live="polite"></p>
+            </div>
+            <a class="play-scroll" href="#studio">MEET OUR STUDIO <span>↓</span></a>
+        </section>
+        <section id="studio" class="play-studio section" tabindex="-1" aria-labelledby="studio-title">
+            <div><p class="eyebrow">HELLO, WE ARE STUDIO OKK</p><h2 id="studio-title">A playful mind.<br><em>Endless possibilities.</em></h2></div>
+            <p>조금 다른 시선과 유쾌한 상상으로<br>브랜드의 이야기에 생명을 불어넣습니다.<br>작은 아이디어가 특별한 친구가 되는 곳,<br>여기는 스튜디오 오키키입니다.</p>
         </section>
         <section id="works" class="works section" tabindex="-1">
             <div class="cloud works-cloud-one" aria-hidden="true"></div>

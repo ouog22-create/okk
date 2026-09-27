@@ -16,7 +16,7 @@ class Handler(SimpleHTTPRequestHandler):
 
     def do_GET(self):
         path = urlsplit(self.path).path
-        if path in ('/', '/about', '/about/', '/works', '/works/') or re.fullmatch(r'/works/project-0[1-4]/?', path):
+        if path in ('/', '/about', '/about/', '/works', '/works/') or re.fullmatch(r'/works/project-0[1-6]/?', path):
             self.path = '/index.html'
         super().do_GET()
 
