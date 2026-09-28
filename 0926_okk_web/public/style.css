@@ -890,6 +890,10 @@ textarea[aria-invalid=true] {
     animation: hop .7s
 }
 
+.reacting.frame-playing .mascot {
+    animation: none
+}
+
 .ready .intro-circle {
     opacity: .65
 }
@@ -1463,6 +1467,10 @@ textarea[aria-invalid=true] {
     transform-origin: 50% 75%
 }
 
+.intro .frame-playing .mascot-image {
+    animation: none
+}
+
 .friends-image {
     margin: 0;
     background: #eef3fc;
@@ -1713,6 +1721,11 @@ textarea[aria-invalid=true] {
 .hero-friend .mascot-image {
     mix-blend-mode: normal;
     filter: drop-shadow(0 14px 12px #24498218);
+}
+
+.hero-friend.frame-playing .mascot-image {
+    transform: scale(1.28);
+    transform-origin: center;
 }
 
 .hero-friend .hello-bubble {

@@ -47,6 +47,7 @@ function setupHero() {
     const hero = $('.hero'), position = $('.mascot-position');
     const friends = [...hero.querySelectorAll('.hero-friend')];
     let timers = [], scrolled = false;
+    const updateImages = [];
     const title = $('.hero-title', hero);
     let titleObserver;
     // Play the title when it becomes visible, independently of character interactions.
@@ -75,6 +76,14 @@ function setupHero() {
     introPlayed = true;
     friends.forEach(friend => {
         const button = $('.mascot', friend), img = $('.mascot-image', friend);
+        const still = img.getAttribute('src');
+        const animated = asset(`${button.dataset.character}-loop.webp`);
+        const updateImage = () => {
+            const next = reduced.matches ? still : animated;
+            if (img.getAttribute('src') !== next) img.src = next;
+            friend.classList.toggle('frame-playing', !reduced.matches);
+        };
+        updateImages.push(updateImage);
         button.addEventListener('click', () => {
             if (button.dataset.character === 'okkimong') {
                 const open = button.getAttribute('aria-expanded') !== 'true';
@@ -83,9 +92,15 @@ function setupHero() {
             }
             react(friend);
         });
-        const imageFailed = () => { img.hidden = true; $('.mascot-fallback', friend).hidden = false; finish(); };
-        img.addEventListener('error', imageFailed, { once: true });
+        const imageFailed = () => { if (img.getAttribute('src') !== still) return; img.hidden = true; $('.mascot-fallback', friend).hidden = false; finish(); };
+        img.addEventListener('error', () => {
+            if (img.getAttribute('src') === animated) {
+                img.src = still;
+                friend.classList.remove('frame-playing');
+            } else imageFailed();
+        });
         if (img.complete && !img.naturalWidth) imageFailed();
+        updateImage();
     });
     const scroll = () => {
         if (scrollY > 20 && hero.classList.contains('intro')) finish();
@@ -97,7 +112,7 @@ function setupHero() {
         position.style.setProperty('--tilt', `${(e.clientX - r.left - r.width / 2) / r.width * 5}deg`);
     };
     const leave = () => position.style.setProperty('--tilt', '0deg');
-    const change = () => { if (reduced.matches) { titleObserver?.disconnect(); title.classList.remove('title-waiting', 'title-playing'); finish(); leave(); friends.forEach(friend => friend.classList.remove('reacting')); } };
+    const change = () => { updateImages.forEach(updateImage => updateImage()); if (reduced.matches) { titleObserver?.disconnect(); title.classList.remove('title-waiting', 'title-playing'); finish(); leave(); friends.forEach(friend => friend.classList.remove('reacting')); } };
     addEventListener('scroll', scroll, { passive: true });
     hero.addEventListener('pointermove', move); hero.addEventListener('pointerleave', leave); reduced.addEventListener('change', change);
     cleanup = () => { titleObserver?.disconnect(); timers.forEach(clearTimeout); removeEventListener('scroll', scroll); reduced.removeEventListener('change', change); };
