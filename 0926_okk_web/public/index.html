@@ -7,19 +7,20 @@
     <meta name="theme-color" content="#004EEA">
     <meta name="description" content="STUDIO OKK — 젊고 유쾌한 감각으로 만드는 새로운 장면.">
     <title>STUDIO OKK — A little different. A lot of fun.</title>
-    <link rel="stylesheet" href="./style.css">
-    <script src="./app.js" defer></script>
+    <link rel="stylesheet" href="/okk/style.css">
+    <script src="/okk/project-view.js" defer></script>
+    <script src="/okk/app.js" defer></script>
 </head>
 
 <body>
     <a class="skip" href="#main">본문으로 이동</a>
-    <header id="site-header"><a class="brand" href="/okk/" aria-label="STUDIO OKK 홈">studio <b>okk<span class="brand-star" aria-hidden="true"><img src="./assets/star_b.png" alt="" width="31" height="31"></span></b></a>
+    <header id="site-header"><a class="brand" href="/okk/" aria-label="STUDIO OKK 홈">studio <b>okk<span class="brand-star" aria-hidden="true"><img src="/okk/assets/star_b.png" alt="" width="31" height="31"></span></b></a>
         <nav aria-label="주 메뉴"><a href="/okk/about">Studio</a><a href="/okk/works">Works <span
-                    class="nav-dot"></span></a><button data-contact>Let’s talk <span>↗</span></button></nav>
+                    class="nav-dot"></span></a><button data-contact aria-haspopup="dialog" aria-controls="contact">Let’s talk <span>↗</span></button></nav>
     </header>
     <main id="main" tabindex="-1"></main>
     <footer><a class="footer-logo" href="/okk/">studio okk<span>®</span></a>
-        <div>© <span id="year"></span> STUDIO OKK</div><button data-contact>Say hello ↗</button><a href="#" data-top
+        <div>© <span id="year"></span> STUDIO OKK</div><button data-contact aria-haspopup="dialog" aria-controls="contact">Say hello ↗</button><a href="#" data-top
             aria-label="맨 위로">↑</a>
     </footer>
     <dialog id="contact" aria-labelledby="contact-title">

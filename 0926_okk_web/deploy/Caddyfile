@@ -1,0 +1,4 @@
+# Replace with the actual domain; DNS must point to this server.
+your-domain.example {
+    reverse_proxy 127.0.0.1:3000
+}

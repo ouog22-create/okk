@@ -16,10 +16,20 @@ function packageFigure(kind, back = false) {
     if (kind === 'monkey') return `<img class="package-monkey" src="../b/assets/okkimong-cutout.png" alt="오키몽" onerror="this.onerror=null;this.src='../assets/okkimong-poster.jpg'">`;
     return `<div class="package-okk ${back ? 'back-view' : ''}"><div class="slot-sprite" role="img" aria-label="오키키${back ? ' 뒷모습' : ''}"></div><img class="slot-image" src="../assets/okk-poster.jpg" alt="오키키" loading="lazy"></div>`;
 }
-$('#work-grid').innerHTML = works.map((w, i) => `<article class="work-slot" style="--pack-accent:${packageColors[i]}"><div class="toy-package"><div class="package-label"><span class="hang-tab"></span><strong>OKK! FRIENDS</strong><b class="package-number" aria-hidden="true">${String(i + 1).padStart(2, '0')}</b><span class="package-edition">ORIGINAL</span><span class="package-series">✦ CHARACTER COLLECTION</span></div><div class="slot-stage"><div class="package-art ${i === 2 || i === 5 ? 'duo' : ''} variant-${i}">${i === 1 || i === 4 ? packageFigure('monkey') : i === 2 || i === 5 ? packageFigure('okk') + packageFigure('monkey') : packageFigure('okk', i === 3)}</div><div class="package-caption"><b>${w.title}</b><span>STUDIO OKK ORIGINAL</span></div></div></div><div class="slot-info"><button class="select-work" data-project="${w.id}" aria-label="상세 보기" aria-haspopup="dialog"><span>상세 보기</span></button></div></article>`).join('');
+$('#work-grid').innerHTML = works.map((w, i) => `<article class="work-slot" style="--pack-accent:${packageColors[i]}"><div class="toy-package"><div class="package-label"><span class="hang-tab"></span><strong>OKK! FRIENDS</strong><b class="package-number" aria-hidden="true">${String(i + 1).padStart(2, '0')}</b><span class="package-edition">ORIGINAL</span><span class="package-series">✦ CHARACTER COLLECTION</span></div><div class="slot-stage"><div class="package-art ${i === 2 || i === 5 ? 'duo' : ''} variant-${i}">${i === 1 || i === 4 ? packageFigure('monkey') : i === 2 || i === 5 ? packageFigure('okk') + packageFigure('monkey') : packageFigure('okk', i === 3)}</div><div class="package-caption"><b>${w.title}</b><span>STUDIO OKK ORIGINAL</span></div></div></div><div class="slot-info"><button class="select-work" data-project="${w.id}" aria-label="${w.title} 상세 보기" aria-haspopup="dialog"><span>상세 보기</span></button></div></article>`).join('');
 const logos = [['1', 'peripera'], ['2', 'NHR'], ['3', 'the SMC GROUP'], ['4', 'SUNSOFT'], ['5', 'oVice'], ['6', 'Finset N'], ['7', 'heaventree'], ['8', '울산광역정신건강복지센터'], ['9', '대구대학교 산학협력단'], ['10', 'MVM'], ['sk', 'SK'], ['Artygen', 'Artygen Space'], ['사회평론', '사회평론'], ['앳홈', 'ATHOME'], ['망고', 'MANGO board']];
 const logoImages = logos.map(([file, name]) => `<img src="../assets/${encodeURIComponent(file)}.png" alt="${name}" width="105" height="42">`).join('');
 $('#logos').innerHTML = `<div class="logo-group">${logoImages}</div><div class="logo-group" aria-hidden="true">${logoImages}</div>`;
+const logosMotion = $('.logos-motion');
+let logosPaused = reduced.matches;
+function syncLogosMotion() {
+    $('#logos').classList.toggle('is-paused', logosPaused);
+    logosMotion.hidden = reduced.matches;
+    logosMotion.textContent = logosPaused ? '로고 움직임 재생하기' : '로고 움직임 멈추기';
+}
+logosMotion.onclick = () => { logosPaused = !logosPaused; syncLogosMotion(); };
+reduced.addEventListener('change', () => { logosPaused = reduced.matches; syncLogosMotion(); });
+syncLogosMotion();
 const scene = $('.page-scene');
 function sizeScene() { scene.style.setProperty('--scene-top', `${Math.min(0, innerHeight - scene.offsetHeight)}px`); }
 new ResizeObserver(sizeScene).observe(scene);
@@ -104,5 +114,5 @@ requestAnimationFrame(() => {
     if (location.hash.startsWith('#work-')) { const id = location.hash.slice(6); history.replaceState({}, '', '#works'); navigate('#works', 'instant'); openProject(id); }
     else navigate(location.hash || '#home', 'instant');
 });
-// Native fragment scrolling may run after image layout on initial navigation.
+// 이미지 배치 후 브라우저의 해시 스크롤을 보정한다.
 addEventListener('load', () => { if (!location.hash.startsWith('#work-')) navigate(location.hash || '#home', 'instant'); }, { once: true });

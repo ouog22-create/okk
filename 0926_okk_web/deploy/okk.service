@@ -1,0 +1,20 @@
+[Unit]
+Description=STUDIO OKK web and administration
+After=network.target
+
+[Service]
+User=okk
+Group=okk
+WorkingDirectory=/opt/okk
+EnvironmentFile=/etc/okk.env
+ExecStart=/opt/okk/.venv/bin/gunicorn --workers 2 --bind 127.0.0.1:3000 --timeout 60 --access-logfile - cms:create_app()
+Restart=on-failure
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/okk
+
+[Install]
+WantedBy=multi-user.target

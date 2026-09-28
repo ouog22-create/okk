@@ -282,7 +282,7 @@ nav button span {
     font-family: Georgia, serif;
     font-style: italic;
     font-size: 13px;
-    color: #76766e;
+    color: #62635b;
     transform: rotate(-7deg)
 }
 
@@ -368,7 +368,7 @@ nav button span {
 }
 
 .section-heading h2>span:not(.blue) {
-    color: #909187
+    color: #62635b
 }
 
 .section-heading h2 i {
@@ -414,22 +414,22 @@ nav button span {
 
 .lavender {
     background: #e3dfef;
-    color: #817294
+    color: #635273
 }
 
 .lime {
     background: #e9edcd;
-    color: #7d8656
+    color: #566034
 }
 
 .pink {
     background: #f0dcd8;
-    color: #a17c77
+    color: #79514c
 }
 
 .sky {
     background: #dfe9ee;
-    color: #6c8897
+    color: #496674
 }
 
 .placeholder-corner {
@@ -485,7 +485,7 @@ nav button span {
     margin-top: 18px
 }
 
-.work-caption h3 {
+.work-caption :is(h2, h3) {
     font-size: 21px;
     letter-spacing: -.5px;
     margin: 0 0 8px
@@ -493,7 +493,7 @@ nav button span {
 
 .work-caption p {
     font-size: 11px;
-    color: #7c7d75;
+    color: #62635b;
     margin: 0
 }
 
@@ -521,7 +521,7 @@ nav button span {
 
 .section-heading>p {
     font-size: 13px;
-    color: #74756d
+    color: #62635b
 }
 
 .blue {
@@ -661,7 +661,7 @@ footer>a:last-child {
 
 .draft-note {
     font-size: 11px;
-    color: #797b72;
+    color: #62635b;
     display: block;
     margin-top: 20px
 }
@@ -692,7 +692,7 @@ footer>a:last-child {
 }
 
 .muted {
-    color: #85867e
+    color: #62635b
 }
 
 .about-copy .pill {
@@ -787,7 +787,7 @@ dialog::backdrop {
 
 .dialog-content>p {
     font-size: 13px;
-    color: #74766c;
+    color: #62635b;
     margin-bottom: 30px
 }
 
@@ -838,7 +838,7 @@ textarea[aria-invalid=true] {
 
 .form-note {
     font-size: 10px;
-    color: #7a7d70;
+    color: #62635b;
     line-height: 1.6
 }
 
@@ -1255,7 +1255,7 @@ textarea[aria-invalid=true] {
         margin-top: 14px
     }
 
-    .work-caption h3 {
+    .work-caption :is(h2, h3) {
         font-size: 19px
     }
 
@@ -1430,7 +1430,6 @@ textarea[aria-invalid=true] {
     }
 }
 
-/* Supplied character artwork: original poster files remain unmodified. */
 .mascot {
     background: transparent;
     border: 0;
@@ -1532,7 +1531,7 @@ textarea[aria-invalid=true] {
 
 .character-story .character-english {
     font-size: 12px;
-    color: #767a80;
+    color: #5e646b;
     line-height: 1.8;
     margin-top: 24px
 }
@@ -1604,7 +1603,6 @@ textarea[aria-invalid=true] {
     }
 }
 
-/* Hero artwork and navigation placement. */
 #site-header {
     position: sticky;
     top: 0;
@@ -1697,7 +1695,6 @@ textarea[aria-invalid=true] {
     }
 }
 
-/* A: the supplied transparent character artwork, each with its own button. */
 .hero-friends {
     display: flex;
     align-items: center;
@@ -1820,7 +1817,6 @@ textarea[aria-invalid=true] {
     }
 }
 
-/* Keep the title reveal independent of the character intro and scroll reactions. */
 .hero-title.title-waiting>span:not(.word-space) {
     opacity: 0;
 }
@@ -1831,7 +1827,6 @@ textarea[aria-invalid=true] {
     }
 }
 
-/* Use the supplied artwork so the brand star cannot become a platform emoji. */
 .brand-star img {
     display: block;
     width: 1em;
@@ -1845,3 +1840,11 @@ textarea[aria-invalid=true] {
     height: 1em;
     object-fit: contain;
 }
+
+.work-card > .project-image{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;border-radius:inherit}.detail > .project-image,.project-gallery .project-image{display:block;width:100%;height:auto;border-radius:20px}.project-copy{white-space:pre-wrap;overflow-wrap:anywhere}.project-gallery{margin:32px 0}.project-gallery figcaption{padding:14px 0;color:#666}.work-caption :is(h2, h3),.detail h1{overflow-wrap:anywhere}
+
+.hero-motion { display:block; margin:12px 0; padding:10px 16px; border:1px solid var(--line); border-radius:30px; min-height:44px; font-size:13px; }
+#main { scroll-margin-top:110px; }
+:target { scroll-margin-top:110px; }
+.preview-label { padding:24px 24px 0; font-size:18px; }
+.preview-card { padding:24px; grid-template-columns:1fr; }

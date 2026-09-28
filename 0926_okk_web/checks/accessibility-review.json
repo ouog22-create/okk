@@ -1,0 +1,137 @@
+{
+  "pages": [
+    {
+      "page": "/okk/",
+      "violations": [],
+      "manual": [
+        {
+          "id": "aria-valid-attr-value",
+          "count": 2
+        },
+        {
+          "id": "color-contrast",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "page": "/okk/about",
+      "violations": [],
+      "manual": [
+        {
+          "id": "aria-valid-attr-value",
+          "count": 2
+        },
+        {
+          "id": "color-contrast",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "page": "/okk/works",
+      "violations": [],
+      "manual": [
+        {
+          "id": "aria-valid-attr-value",
+          "count": 2
+        },
+        {
+          "id": "color-contrast",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "page": "/okk/works/project-01",
+      "violations": [],
+      "manual": [
+        {
+          "id": "aria-valid-attr-value",
+          "count": 2
+        },
+        {
+          "id": "color-contrast",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "page": "/b/",
+      "violations": [],
+      "manual": [
+        {
+          "id": "color-contrast",
+          "count": 71
+        }
+      ]
+    },
+    {
+      "page": "/b-1/",
+      "violations": [],
+      "manual": [
+        {
+          "id": "color-contrast",
+          "count": 93
+        }
+      ]
+    },
+    {
+      "page": "/admin/",
+      "violations": [],
+      "manual": []
+    },
+    {
+      "page": "contact-dialog",
+      "violations": [],
+      "manual": []
+    },
+    {
+      "page": "admin-list",
+      "violations": [],
+      "manual": [
+        {
+          "id": "color-contrast",
+          "count": 14
+        }
+      ]
+    },
+    {
+      "page": "admin-editor",
+      "violations": [],
+      "manual": [
+        {
+          "id": "color-contrast",
+          "count": 7
+        },
+        {
+          "id": "frame-tested",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "page": "preview-detail",
+      "violations": [],
+      "manual": []
+    },
+    {
+      "page": "preview-card",
+      "violations": [],
+      "manual": []
+    },
+    {
+      "page": "admin-relogin",
+      "violations": [],
+      "manual": [
+        {
+          "id": "color-contrast",
+          "count": 7
+        }
+      ]
+    }
+  ],
+  "js_errors": [],
+  "date": "2026-09-28",
+  "axe_version": "4.10.3"
+}

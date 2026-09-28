@@ -10,7 +10,6 @@ from unicodedata import normalize
 from PIL import Image
 
 
-# 여기의 숫자만 바꾸세요. 숫자가 작으면 빠르고, 크면 느립니다.
 FRAME_DURATION_MS = 50  # 프레임당 밀리초, 두 캐릭터에 동일하게 적용
 
 ROOT = Path(__file__).resolve().parent

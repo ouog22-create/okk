@@ -1430,7 +1430,6 @@ textarea[aria-invalid=true] {
     }
 }
 
-/* Static layout is also used on short viewports so content never overlaps. */
 .static-hero .hero-track {
     height: auto
 }
@@ -1511,7 +1510,6 @@ textarea[aria-invalid=true] {
     }
 }
 
-/* Collectible blister packages: editable labels above a clear molded shell. */
 .machine-window {
     background: linear-gradient(120deg, #d8e2eb, #b8c7d6);
     gap: 30px 24px;
@@ -1929,7 +1927,6 @@ textarea[aria-invalid=true] {
     }
 }
 
-/* Contact: the blue surface rises into view, with the full form in the page. */
 .contact-section {
     background: #e2f2ff;
     isolation: isolate;
@@ -2129,7 +2126,6 @@ textarea[aria-invalid=true] {
 }
 
 
-/* Continuous sky, display typography, and the full-width contact reveal. */
 h2, h2 em { font-family: var(--display-font); }
 h2 em { font-style: normal; }
 .studio-copy h2 em, .section-title h2 em, .contact-section h2 em { font-weight: inherit; }
@@ -2161,3 +2157,12 @@ h2 em { font-style: normal; }
     .page-scene { position: relative; top: auto; }
     .logo-group[aria-hidden] { display: none; }
 }
+
+.brand small { background:#c62f2c; }
+.logos-motion { padding:10px 14px; border:1px solid currentColor; border-radius:24px; min-height:44px; flex-shrink:0; background:white; color:#004eea; font:inherit; font-size:12px; }
+.logo-track.is-paused { animation-play-state:paused; }
+@media(max-width:767px) { .clients { flex-wrap:wrap; } .logos-motion { margin-left:auto; } }
+
+.logo-strip { min-width:0; overflow-x:auto; scrollbar-width:thin; }
+.logo-track.is-paused { transform:none !important; }
+.page-scene:focus-within { position:relative; top:auto; }

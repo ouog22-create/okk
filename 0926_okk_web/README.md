@@ -1,17 +1,20 @@
 # STUDIO OKK
 
-PRD v0.3 기반 포트폴리오 프로토타입. 별도 패키지 설치 없이 Python 3로 실행합니다.
+PRD v0.3 기반 포트폴리오와 A안 Work 관리 어드민입니다. Python 3.11 이상과 프로젝트 가상환경을 사용합니다.
 
 ```sh
 cd /Users/choijiyeon/Documents/Project/0926_okk_web
-python3 server.py
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+.venv/bin/python manage.py admin
+.venv/bin/python server.py
 ```
 
-http://localhost:3000 에 접속합니다. 중지는 Ctrl+C. 이미 포트가 사용 중이면 `PORT=3001 python3 server.py`로 실행합니다.
+http://localhost:3000 에 접속합니다. 중지는 Ctrl+C. 이미 포트가 사용 중이면 `PORT=3001 .venv/bin/python server.py`로 실행합니다.
 
 ## B안 — Blue Playground
 
-기존 A안은 `/`, B안은 **http://localhost:3000/b/** 에서 확인합니다. 같은 `python3 server.py` 명령으로 실행합니다.
+기존 A안은 `/`, B안은 **http://localhost:3000/b/** 에서 확인합니다. 같은 `.venv/bin/python server.py` 명령으로 실행합니다.
 
 - 원페이지: 히어로 → Studio → 캐릭터 자판기 → 클라이언트 띠배너 → Contact.
 - 고정 GNB의 앵커 이동, 현재 섹션 표시, 모바일 메뉴, 직접 해시 접속 지원.
@@ -34,7 +37,7 @@ http://localhost:3000 에 접속합니다. 중지는 Ctrl+C. 이미 포트가 �
 - Contacts: 공통 모달, 키보드 포커스, 필수 입력 검사, 전송 상태 및 오류 표시
 - 모바일 대응, 모션 감소 설정 지원, 스크롤로 진입 연출 생략
 
-`public/app.js`의 works 배열에서 작업 데이터를 관리합니다. `placeholder()`가 이미지 자리를, `setupHero()`가 마스코트 반응을 담당합니다. `public/style.css`에서 디자인과 진입 타이밍을 수정합니다. 사용된 15개 클라이언트 기본 로고는 `public/assets`에 복사했습니다.
+A안 작업 데이터는 `/admin/`에서 관리하며 SQLite에 저장합니다. 공개된 프로젝트는 `/api/projects`를 통해 불러옵니다. `public/project-view.js`가 프로젝트 카드·상세를, `setupHero()`가 마스코트 반응을 담당합니다. `public/style.css`에서 디자인과 진입 타이밍을 수정합니다. 사용된 15개 클라이언트 기본 로고는 `public/assets`에 복사했습니다.
 
 ## 준비할 자료
 
@@ -48,7 +51,7 @@ http://localhost:3000 에 접속합니다. 중지는 Ctrl+C. 이미 포트가 �
 
 설정 전 접수 시 준비 중 메시지를 표시하며 입력을 보존합니다. 실제 발송 성공을 가짜로 표시하지 않습니다. SMTP 서버가 메시지를 접수해야 성공을 반환합니다. 실제 수신함 도착은 운영 설정 후 확인해야 합니다. 문의 데이터는 별도 저장하지 않습니다. 현재 개인정보 안내는 초안이며 보관 기간 등 운영 정책을 확정한 후 공개합니다.
 
-이 서버는 로컬 검토용입니다. 공개 배포 시 운영 서버, HTTPS, SMTP 인증 및 개인정보 안내를 구성해주세요.
+`server.py` 실행은 로컬 검토용입니다. 운영용 Gunicorn·HTTPS·영구 저장소 구성과 관리자 사용법은 [ADMIN_GUIDE.md](ADMIN_GUIDE.md)를 참고해주세요. SMTP 인증 및 개인정보 안내는 운영 환경에 맞게 구성해주세요.
 # okk
 
 
@@ -63,3 +66,13 @@ http://localhost:3000 에 접속합니다. 중지는 Ctrl+C. 이미 포트가 �
 - B안의 WORKS 카드 호버, 상세 모달, 클라이언트 자동 스크롤, 문의·푸터 통합 섹션을 이어받습니다.
 
 구현: `public/b-1/index.html`, `style.css`, `app.js`, `playground.js`. 공통 스타일과 이미지는 기존 B안 파일을 참조합니다. B안 자체는 변경하지 않습니다.
+
+## A안 Work 어드민
+
+`/admin/`에서 로그인 후 프로젝트 등록·편집, 이미지 업로드·정렬, 초안 저장·공개, 비공개 전환, 휴지통·복구, 노출 순서 변경이 가능합니다. 홈과 Work 목록·상세에 공개본만 반영합니다. B/B-1은 기존 데이터를 유지합니다. 기본 관리자 계정은 없으며 `manage.py admin`으로 생성합니다.
+
+실행·배포·백업·검증: [ADMIN_GUIDE.md](ADMIN_GUIDE.md).
+
+## 구현 검토
+
+주석 정리, 접근성 수정, 성능 개선 및 후속 과제: [REVIEW_2026-09-28.md](REVIEW_2026-09-28.md).

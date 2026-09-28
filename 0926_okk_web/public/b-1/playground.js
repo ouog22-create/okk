@@ -32,7 +32,7 @@
         controls.forEach(button => button.classList.toggle('is-pressed', direction() === Number(button.dataset.move)));
     }
     function collect() {
-        // Stars require a jump; collecting uses the character's center in world coordinates.
+        // 점프 중 캐릭터 중심과 별의 거리를 검사한다.
         if (y < 35) return;
         for (const star of stars) {
             if (star.classList.contains('is-collected')) continue;

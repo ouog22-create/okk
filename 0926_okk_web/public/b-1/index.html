@@ -25,7 +25,7 @@
             <div class="play-sky" aria-hidden="true">
                 <div class="cloud play-cloud c-left"></div><div class="cloud play-cloud c-right"></div>
                 <div class="cloud play-cloud c-small"></div>
-                
+
             </div>
             <div class="play-heading">
                 <p class="eyebrow">A LITTLE DIFFERENT. A LOT OF FUN.</p>
@@ -37,7 +37,7 @@
                 <div class="play-tree tree-left"><i></i><i></i><i></i></div>
                 <div class="play-tree tree-right"><i></i><i></i><i></i></div>
                 <div class="play-floor"></div>
-                
+
                 <div class="world-sign">GOOD IDEAS<br><b>START WITH PLAY.</b><span>↗</span></div>
             </div>
             <div class="playground" data-character="okk" tabindex="0" role="region" aria-label="오키키 캐릭터 놀이터" aria-describedby="play-instructions">
@@ -54,7 +54,7 @@
                 </div>
                 <div class="play-ui">
                     <div class="play-help"><span class="play-live-dot"></span><b>PLAY WITH OKK</b><p id="play-instructions">← → / A D 이동 · SPACE 점프<br> 놀이터를 클릭하거나 터치해 이동해보세요.</p></div>
-                    <div class="play-controls" aria-label="캐릭터 조작">
+                    <div class="play-controls" role="group" aria-label="캐릭터 조작">
                         <button type="button" data-move="-1" aria-label="왼쪽으로 이동">←</button>
                         <button type="button" data-move="1" aria-label="오른쪽으로 이동">→</button>
                         <button type="button" class="jump-button" data-jump aria-label="점프">JUMP <span>↑</span></button>
@@ -89,9 +89,9 @@
         </section>
         <section id="clients" class="clients" tabindex="-1" aria-labelledby="clients-title">
             <h2 id="clients-title">CLIENTS<br></h2>
-            <div class="logo-strip" tabindex="0" role="region" aria-label="클라이언트 로고, 자동 스크롤. 포커스하면 일시 정지">
+            <div class="logo-strip" tabindex="0" role="region" aria-label="클라이언트 로고">
                 <div class="logo-track" id="logos"></div>
-            </div><span class="strip-hint" aria-hidden="true">↔</span>
+            </div><button class="logos-motion" type="button" aria-controls="logos">로고 움직임 멈추기</button><span class="strip-hint" aria-hidden="true">↔</span>
         </section>
         </div>
         <section id="contact" class="contact-section section" tabindex="-1" aria-labelledby="contact-title">
