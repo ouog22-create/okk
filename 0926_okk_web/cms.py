@@ -10,7 +10,7 @@ import warnings
 from pathlib import Path
 from flask import Flask, abort, g, jsonify, request, send_from_directory
 from werkzeug.exceptions import HTTPException
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 from PIL import Image, ImageOps
 from clients_service import initialize_clients, register_client_routes
 
@@ -66,6 +66,15 @@ def create_app(data_dir=None):
         CREATE INDEX IF NOT EXISTS projects_display_order ON projects(trashed,position,id);
         ''')
         db().execute("BEGIN IMMEDIATE")
+        # Bootstrap only an empty database; restarting must not reset an account.
+        if not db().execute('SELECT 1 FROM admin WHERE id=1').fetchone():
+            username = os.getenv('OKK_ADMIN_USERNAME', '').strip()
+            password = os.getenv('OKK_ADMIN_PASSWORD', '')
+            if username or password:
+                if not username or len(username) > 100 or not 12 <= len(password) <= 1024:
+                    raise RuntimeError('OKK_ADMIN_USERNAME과 12~1024자 OKK_ADMIN_PASSWORD를 함께 설정해주세요.')
+                db().execute('INSERT INTO admin VALUES(1,?,?)',
+                             (username, generate_password_hash(password)))
         if not db().execute("SELECT 1 FROM meta WHERE key='seeded'").fetchone():
             for i, color in enumerate(['lavender', 'lime', 'pink', 'sky', 'lime', 'lavender'], 1):
                 p = dict(slug=f'project-{i:02}', title=f'Project {i:02}', subtitle='', summary='작업명과 프로젝트 소개가 들어갈 자리', client='', year='', scope='', description='작업 소개와 프로젝트의 배경, 과정 및 결과를 담을 공간입니다.', color=color, featured=True, thumbnail='', cover='', gallery=[])
