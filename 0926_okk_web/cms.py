@@ -12,6 +12,7 @@ from flask import Flask, abort, g, jsonify, request, send_from_directory
 from werkzeug.exceptions import HTTPException
 from werkzeug.security import check_password_hash
 from PIL import Image, ImageOps
+from clients_service import initialize_clients, register_client_routes
 
 ROOT = Path(__file__).resolve().parent
 Image.MAX_IMAGE_PIXELS = 24_000_000
@@ -75,6 +76,7 @@ def create_app(data_dir=None):
             for row in db().execute('SELECT id,published FROM projects WHERE published IS NOT NULL AND trashed=0').fetchall():
                 sync_public_media(row['id'], row['published'])
             db().execute("INSERT INTO meta VALUES('media-index-v1')")
+        initialize_clients(db())
         db().commit()
 
     def session():
@@ -114,6 +116,8 @@ def create_app(data_dir=None):
         if not isinstance(value, dict):
             abort(400, '입력 형식을 확인해주세요.')
         return value
+
+    register_client_routes(app, db, body)
 
     def limit(key, maximum, seconds):
         now = time.time()
@@ -196,14 +200,22 @@ def create_app(data_dir=None):
         for url in [out['thumbnail'], out['cover']] + [i['src'] for i in out['gallery']]:
             if url and (not re.fullmatch(r'/media/[a-f0-9]{32}\.webp', url) or not db().execute('SELECT 1 FROM media WHERE id=?', (url.split('/')[-1],)).fetchone()):
                 abort(400, '등록된 이미지를 선택해주세요.')
+        out['subtitle'] = 'STUDIO OKK / WORK'
         return out
 
     @app.post('/api/admin/projects')
     def create_project():
-        p = validate(body())
+        values = body()
+        p = validate(values)
+        publish = values.get('publish', False)
+        if not isinstance(publish, bool):
+            abort(400, '공개 상태를 확인해주세요.')
         identity = secrets.token_hex(12)
         try:
-            db().execute('INSERT INTO projects(id,slug,draft,position) VALUES(?,?,?,(SELECT COALESCE(MAX(position),0)+1 FROM projects))', (identity, p['slug'], json.dumps(p, ensure_ascii=False)))
+            draft = json.dumps(p, ensure_ascii=False)
+            db().execute('INSERT INTO projects(id,slug,draft,published,position) VALUES(?,?,?,?,(SELECT COALESCE(MAX(position),0)+1 FROM projects))', (identity, p['slug'], draft, draft if publish else None))
+            if publish:
+                sync_public_media(identity, draft)
             db().commit()
         except sqlite3.IntegrityError:
             abort(409, '이미 사용 중인 URL 식별자입니다.')
@@ -227,6 +239,10 @@ def create_app(data_dir=None):
             if p['slug'] != row['slug']:
                 abort(400, '생성 후 URL 식별자는 변경할 수 없습니다.')
             draft = json.dumps(p, ensure_ascii=False)
+            if 'publish' in values:
+                if not isinstance(values['publish'], bool) or (values['publish'] and trashed):
+                    abort(400, '공개 상태를 확인해주세요.')
+                published = draft if values['publish'] else None
         elif action == 'publish' and not trashed:
             published = draft
         elif action == 'unpublish':
@@ -238,7 +254,7 @@ def create_app(data_dir=None):
         else:
             abort(400, '허용되지 않은 작업입니다.')
         con.execute('UPDATE projects SET draft=?,published=?,trashed=?,version=version+1,updated=CURRENT_TIMESTAMP WHERE id=?', (draft, published, trashed, identity))
-        if action != 'save':
+        if published != row['published'] or trashed != row['trashed']:
             sync_public_media(identity, published if not trashed else None)
         con.commit()
         return jsonify(project=record(con.execute('SELECT * FROM projects WHERE id=?', (identity,)).fetchone()))
@@ -282,7 +298,7 @@ def create_app(data_dir=None):
     def media(name):
         if not re.fullmatch(r'[a-f0-9]{32}\.webp', name):
             abort(404)
-        if not session() and not db().execute('SELECT 1 FROM published_media WHERE media_id=? LIMIT 1', (name,)).fetchone():
+        if not session() and not db().execute('SELECT 1 FROM published_media WHERE media_id=? LIMIT 1', (name,)).fetchone() and not db().execute('SELECT 1 FROM clients WHERE logo=? AND visible=1 AND trashed=0 LIMIT 1', ('/media/' + name,)).fetchone():
             abort(404)
         return send_from_directory(data / 'uploads', name)
 

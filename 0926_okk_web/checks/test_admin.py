@@ -188,6 +188,34 @@ class AdminTests(unittest.TestCase):
         self.action(second, 'publish')
         self.assertEqual(self.visitor.get(url).status_code,404)
 
+    def test_save_with_publication_state_is_atomic(self):
+        p = self.new_project()
+        self.assertFalse(p['published'])
+        self.assertEqual(p['draft']['subtitle'], 'STUDIO OKK / WORK')
+        p['draft']['title'] = '공개 토글 ON'
+        p = self.action(p, 'save', project=p['draft'], publish=True)
+        self.assertTrue(p['published'])
+        self.assertEqual(self.public()[-1]['title'], '공개 토글 ON')
+        p['draft']['title'] = '공개 상태에서 저장'
+        p = self.action(p, 'save', project=p['draft'], publish=True)
+        self.assertEqual(self.public()[-1]['title'], '공개 상태에서 저장')
+        p['draft']['title'] = ''
+        failed = self.post('projects/'+p['id'], dict(action='save',version=p['version'],project=p['draft'],publish=True))
+        self.assertEqual(failed.status_code,400)
+        self.assertEqual(self.public()[-1]['title'], '공개 상태에서 저장')
+        self.action(p, 'unpublish')
+        self.assertEqual(len(self.public()),6)
+
+    def test_new_project_can_be_saved_and_published_once(self):
+        project = dict(slug='toggle-on',title='즉시 공개',subtitle='사용하지 않는 부제',color='lavender',publish=True)
+        response = self.post('projects',project)
+        self.assertEqual(response.status_code,201)
+        p = response.json['project']
+        self.assertTrue(p['published'])
+        self.assertEqual(self.public()[-1]['subtitle'],'STUDIO OKK / WORK')
+        invalid = self.post('projects',{**project,'slug':'bad-toggle','publish':'true'})
+        self.assertEqual(invalid.status_code,400)
+
     def test_backup_can_restore_without_sessions(self):
         p = self.action(self.new_project(), 'publish')
         with tempfile.TemporaryDirectory() as destination:

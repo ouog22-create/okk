@@ -89,7 +89,7 @@ with sync_playwright() as p:
     assert page.evaluate('document.activeElement.closest("[data-index]").dataset.index')=='0'
     assert page.evaluate('document.activeElement.dataset.image')=='up'
     page.locator('#save').click()
-    page.get_by_text('초안을 저장했습니다.',exact=True).wait_for()
+    page.get_by_text('저장했습니다. 현재 비공개 상태입니다.',exact=True).wait_for()
     audit('admin-editor')
     preview = page.frame_locator('#preview-frame')
     preview.locator('h1').filter(has_text=TITLE).wait_for()
@@ -105,7 +105,7 @@ with sync_playwright() as p:
         assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), ('editor',width)
     page.set_viewport_size({'width':1440,'height':1000})
     page.on('dialog', lambda dialog: dialog.accept())
-    page.locator('#publish').click()
+    page.locator('.publish-control').click()
     page.get_by_text('공개했습니다.',exact=False).wait_for()
     page.evaluate('scrollTo(0,0)')
     page.screenshot(path='/tmp/okk-review-editor.png', full_page=True)

@@ -554,8 +554,7 @@ nav button span {
     padding: 40px 4.2%
 }
 
-.contact-top,
-.contact-bottom {
+.contact-top {
     display: flex;
     justify-content: space-between;
     font-size: 11px
@@ -595,11 +594,6 @@ nav button span {
     transform: translate(5px, -5px)
 }
 
-.contact-bottom {
-    border-top: 1px solid #ffffff50;
-    padding-top: 23px
-}
-
 footer {
     padding: 40px 4.2%;
     display: flex;
@@ -621,8 +615,17 @@ footer .footer-logo span {
     margin-left: 4px
 }
 
-footer button {
-    font-size: 11px
+.footer-instagram {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+}
+
+.footer-instagram img {
+    display: block;
 }
 
 footer>a:last-child {
@@ -1314,11 +1317,6 @@ textarea[aria-invalid=true] {
         top: 30px
     }
 
-    .contact-bottom {
-        font-size: 8px;
-        padding-top: 18px
-    }
-
     footer {
         padding: 25px 20px;
         flex-wrap: wrap;
@@ -1331,10 +1329,6 @@ textarea[aria-invalid=true] {
 
     footer>div {
         font-size: 8px
-    }
-
-    footer button {
-        font-size: 10px
     }
 
     footer>a:last-child {
@@ -1843,7 +1837,6 @@ textarea[aria-invalid=true] {
 
 .work-card > .project-image{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;border-radius:inherit}.detail > .project-image,.project-gallery .project-image{display:block;width:100%;height:auto;border-radius:20px}.project-copy{white-space:pre-wrap;overflow-wrap:anywhere}.project-gallery{margin:32px 0}.project-gallery figcaption{padding:14px 0;color:#666}.work-caption :is(h2, h3),.detail h1{overflow-wrap:anywhere}
 
-.hero-motion { display:block; margin:12px 0; padding:10px 16px; border:1px solid var(--line); border-radius:30px; min-height:44px; font-size:13px; }
 #main { scroll-margin-top:110px; }
 :target { scroll-margin-top:110px; }
 .preview-label { padding:24px 24px 0; font-size:18px; }

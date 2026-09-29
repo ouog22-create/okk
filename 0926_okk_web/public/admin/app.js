@@ -4,11 +4,17 @@ const esc = OKKProject.esc;
 const form = $('#project-form');
 let csrf = '', projects = [], current = null;
 let dirty = false, busy = false, uploads = 0, mode = 'detail';
-let previewTimer, nextFocus, editorOpener;
+let previewTimer, noticeTimer, nextFocus, editorOpener;
 
 function notice(text = '', error = false) {
-    $('#notice').textContent = text;
-    $('#notice').classList.toggle('error', error);
+    clearTimeout(noticeTimer);
+    const toast = $('#notice');
+    toast.textContent = text;
+    toast.classList.toggle('error', error);
+    if (text) noticeTimer = setTimeout(() => {
+        toast.textContent = '';
+        toast.classList.remove('error');
+    }, 3000);
 }
 
 function focusOn(element) {
@@ -32,7 +38,7 @@ async function api(path, data, multipart = false) {
     catch { throw new Error('서버에 연결할 수 없습니다. 입력 내용은 유지됩니다.'); }
     const result = await response.json().catch(() => ({ error: '요청을 처리하지 못했습니다.' }));
     if (!response.ok) {
-        if (response.status === 401 && path !== 'login' && (!$('#workspace').hidden || !$('#editor').hidden)) {
+        if (response.status === 401 && path !== 'login' && $('#login-view').hidden) {
             if (!$('#relogin').open) $('#relogin').showModal();
         }
         throw new Error(result.error || '요청을 처리하지 못했습니다.');
@@ -43,8 +49,9 @@ async function api(path, data, multipart = false) {
 function setBusy(value) {
     busy = value;
     form.inert = value;
+    $('#client-form').inert = value;
     form.setAttribute('aria-busy', String(value));
-    document.querySelectorAll('#save,#publish,#new,#logout,#back,#refresh,#search,#filter,.row-actions button,.image-actions button,input[type=file]')
+    document.querySelectorAll('#admin-nav button,#clients-workspace button,#clients-workspace input,#clients-workspace select,#client-editor button,#client-visible,#save,#publish,#featured,#new,#logout,#back,#refresh,#search,#filter,.row-actions button,.image-actions button,input[type=file]')
         .forEach(button => button.disabled = value);
 }
 
@@ -99,12 +106,17 @@ function renderList() {
     }).join('') || '<div class="empty">표시할 프로젝트가 없습니다.</div>';
 }
 
+function syncPublish() {
+    $('#publish').checked = !!current?.published;
+    $('#publish-value').textContent = current?.published ? 'ON' : 'OFF';
+}
+
 function blank() {
-    return { title: '', slug: '', subtitle: '', summary: '', client: '', year: '', scope: '', description: '', color: 'lavender', featured: true, thumbnail: '', cover: '', gallery: [] };
+    return { title: '', slug: '', subtitle: 'STUDIO OKK / WORK', summary: '', client: '', year: '', scope: '', description: '', color: 'lavender', featured: true, thumbnail: '', cover: '', gallery: [] };
 }
 
 function values() {
-    return { ...current.draft, ...Object.fromEntries(new FormData(form)),
+    return { ...current.draft, ...Object.fromEntries(new FormData(form)), subtitle: 'STUDIO OKK / WORK',
         featured: form.elements.featured.checked, slug: form.elements.slug.value, gallery: current.draft.gallery };
 }
 
@@ -134,7 +146,7 @@ function showEditor(project) {
     form.elements.slug.readOnly = !!current.id;
     $('#editor-title').textContent = current.id ? '프로젝트 편집' : '새 프로젝트 등록';
     $('#editor-state').textContent = current.id ? state(current) : '새 프로젝트';
-    $('#publish').textContent = current.published ? '변경사항 공개 ↗' : '공개하기 ↗';
+    syncPublish();
     renderImages();
     preview();
     window.scrollTo(0, 0);
@@ -144,9 +156,12 @@ function showEditor(project) {
 function renderImages() {
     $('#covers').innerHTML = ['thumbnail', 'cover'].map(key => {
         const label = key === 'thumbnail' ? '목록 썸네일' : '상세 대표 이미지';
-        return `<div class="image-block"><h3>${label}</h3>
+        const guide = key === 'thumbnail'
+            ? '권장 1,600 × 1,200px (4:3) · 중앙 기준 크롭'
+            : '권장 1,920 × 1,080px (16:9) · 원본 비율 유지';
+        return `<div class="image-block"><h3>${label}</h3><p id="${key}-help" class="hint">${guide}</p>
             ${current.draft[key] ? `<img src="${esc(current.draft[key])}" alt="${label}" decoding="async"><button type="button" data-remove="${key}" aria-label="${label} 제거">이미지 제거</button>` : ''}
-            <label class="upload">${label} ${current.draft[key] ? '교체' : '선택'}<input type="file" data-upload="${key}" aria-describedby="upload-help" accept="image/jpeg,image/png,image/webp"></label></div>`;
+            <label class="upload">${label} ${current.draft[key] ? '교체' : '선택'}<input type="file" data-upload="${key}" aria-describedby="upload-help ${key}-help" accept="image/jpeg,image/png,image/webp"></label></div>`;
     }).join('');
     $('#gallery-count').textContent = `${current.draft.gallery.length}/40`;
     $('#gallery').innerHTML = current.draft.gallery.map((image, index) => `<div class="image-block" data-index="${index}">
@@ -158,31 +173,44 @@ function renderImages() {
         <button type="button" data-image="remove" aria-label="이미지 ${index + 1} 제거">제거</button></div></div>`).join('');
 }
 
-async function save() {
+async function save(publish = !!current.published) {
     if (uploads) throw new Error('이미지 업로드가 끝난 후 저장해주세요.');
     // 기본 입력 검사가 잘못된 필드에 포커스를 줄 수 있게 잠시 해제한다.
     form.inert = false;
     if (!form.reportValidity()) throw new Error('필수 입력 항목을 확인해주세요.');
     form.inert = true;
     const project = values();
-    const result = await api(current.id ? 'projects/' + current.id : 'projects', current.id ? { action: 'save', version: current.version, project } : project);
+    const result = await api(current.id ? 'projects/' + current.id : 'projects', current.id ? { action: 'save', version: current.version, project, publish } : { ...project, publish });
     current = result.project;
     dirty = false;
     form.elements.slug.readOnly = true;
     $('#editor-state').textContent = state(current);
     $('#editor-title').textContent = '프로젝트 편집';
+    syncPublish();
     preview();
 }
 
-$('#save').onclick = () => run(async () => { await save(); notice('초안을 저장했습니다.'); });
-$('#publish').onclick = () => run(async () => {
-    if (!confirm('현재 내용을 사이트에 공개할까요?')) return;
+$('#save').onclick = () => run(async () => {
     await save();
-    current = (await api('projects/' + current.id, { action: 'publish', version: current.version })).project;
-    $('#editor-state').textContent = state(current);
-    $('#publish').textContent = '변경사항 공개 ↗';
-    notice('공개했습니다. A 화면의 Work에서 확인할 수 있습니다.');
+    notice(current.published ? '저장했습니다. 변경사항이 사이트에 반영되었습니다.' : '저장했습니다. 현재 비공개 상태입니다.');
 });
+$('#publish').onchange = () => {
+    const publish = $('#publish').checked;
+    run(async () => {
+        try {
+            if (publish) {
+                await save(true);
+                notice('공개했습니다. A 화면의 Work에서 확인할 수 있습니다.');
+            } else if (current.id) {
+                const pending = values();
+                const result = await api('projects/' + current.id, { action: 'unpublish', version: current.version });
+                current = { ...result.project, draft: pending };
+                $('#editor-state').textContent = dirty ? '저장하지 않은 변경사항 · 비공개' : state(current);
+                notice('비공개로 전환했습니다.' + (dirty ? ' 입력 중인 변경사항은 저장을 눌러주세요.' : ''));
+            }
+        } finally { syncPublish(); }
+    });
+};
 $('#new').onclick = () => { notice(); showEditor(); };
 $('#back').onclick = () => run(async () => {
     if (dirty && !confirm('저장하지 않은 변경사항을 버리고 목록으로 이동할까요?')) return;
@@ -222,6 +250,8 @@ $('#list').onclick = event => {
         focusOn($(`[data-id="${project.id}"] [data-action="${action}"]`) || $(`[data-id="${project.id}"] [data-action="edit"]`) || $('#list-title'));
     });
 };
+
+$('#featured').addEventListener('input', markDirty);
 
 form.onsubmit = event => { event.preventDefault(); $('#save').click(); };
 form.addEventListener('input', event => {
@@ -273,7 +303,7 @@ form.addEventListener('change', event => {
                 else current.draft.gallery.push({ src: result.url, alt: '', caption: '' });
                 markDirty();
             }
-            notice('이미지를 업로드했습니다. 초안 저장 또는 공개를 눌러주세요.');
+            notice('이미지를 업로드했습니다. 저장을 눌러주세요.');
         } finally {
             uploads--; event.target.value = '';
             renderImages(); preview();
@@ -300,7 +330,7 @@ async function authenticate(loginForm, status) {
 $('#login-form').onsubmit = async event => {
     event.preventDefault();
     if (await authenticate(event.target, $('#login-status'))) {
-        $('#login-view').hidden = true; $('#workspace').hidden = false; $('#logout').hidden = false;
+        $('#login-view').hidden = true; $('#workspace').hidden = false; $('#logout').hidden = false; $('#admin-nav').hidden = false;
         await run(async () => { await refresh(); focusOn($('#list-title')); });
     }
 };
@@ -308,7 +338,7 @@ $('#relogin-form').onsubmit = async event => {
     event.preventDefault();
     if (await authenticate(event.target, $('#relogin-status'))) {
         $('#relogin').close(); notice('다시 로그인했습니다. 작업을 다시 실행해주세요.'); preview();
-        focusOn($('#editor').hidden ? $('#list-title') : $('#save'));
+        focusOn(!$('#client-editor').hidden ? $('#client-save') : !$('#clients-workspace').hidden ? $('#clients-title') : $('#editor').hidden ? $('#list-title') : $('#save'));
     }
 };
 $('#logout').onclick = () => run(async () => {
@@ -318,7 +348,7 @@ $('#logout').onclick = () => run(async () => {
 (async () => {
     try {
         csrf = (await api('session')).csrf;
-        $('#login-view').hidden = true; $('#workspace').hidden = false; $('#logout').hidden = false;
+        $('#login-view').hidden = true; $('#workspace').hidden = false; $('#logout').hidden = false; $('#admin-nav').hidden = false;
         await refresh();
     } catch (error) { if (csrf) notice(error.message, true); }
 })();
