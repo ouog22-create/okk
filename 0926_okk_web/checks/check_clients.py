@@ -1,5 +1,8 @@
 """Browser smoke test against the disposable review server on port 3098."""
 import base64
+import os
+
+BASE = os.getenv('OKK_REVIEW_URL', 'http://127.0.0.1:3098')
 from playwright.sync_api import sync_playwright
 
 with sync_playwright() as p:
@@ -7,7 +10,7 @@ with sync_playwright() as p:
     page = browser.new_page()
     errors = []
     page.on('pageerror', lambda error: errors.append(str(error)))
-    page.goto('http://127.0.0.1:3098/admin/')
+    page.goto(BASE + '/admin/')
     page.locator('#login-form [name=username]').fill('test-editor')
     page.locator('#login-form [name=password]').fill('temporary-check-password')
     page.locator('#login-form button').click()
@@ -29,7 +32,7 @@ with sync_playwright() as p:
     page.wait_for_function("document.querySelector('#notice').textContent.includes('반영')")
     audit()
     visitor = browser.new_page()
-    visitor.goto('http://127.0.0.1:3098/okk/')
+    visitor.goto(BASE + '/okk/')
     visitor.locator('.logos img[alt="Browser client"]').wait_for()
     assert visitor.locator('.logos img').count() == 16
     page.locator('#client-visible').uncheck(force=True)

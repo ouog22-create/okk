@@ -21,11 +21,11 @@ with sync_playwright() as p:
     assert page.locator('[name=subtitle],[name=color]').count()==0
     assert page.locator('#save').inner_text()=='저장'
     assert not page.locator('#editor-state').is_visible()
-    assert page.locator('.editor-actions > :last-child').get_attribute('id')=='save'
+    assert page.locator('#editor .editor-actions > :last-child').get_attribute('id')=='save'
     assert page.locator('.editor-actions #featured').count()==1
     assert page.locator('#featured').evaluate('(e)=>e.form.id')=='project-form'
     page.locator('#featured').uncheck()
-    page.locator('.publish-control').click()
+    page.locator('#editor .publish-control').click()
     page.get_by_text('필수 입력 항목을 확인해주세요.',exact=True).wait_for()
     assert not toggle.is_checked()
     assert page.locator('[name=title]').evaluate('(e)=>e===document.activeElement')
@@ -62,11 +62,11 @@ with sync_playwright() as p:
     assert next(x for x in public() if x['slug']==slug)['featured'] is True
     page.locator('[name=title]').fill('아직 저장하지 않은 제목')
     page.route('**/api/admin/projects/*',lambda route:route.fulfill(status=500,content_type='application/json',body='{"error":"테스트 저장 실패"}'))
-    page.locator('.publish-control').click()
+    page.locator('#editor .publish-control').click()
     page.get_by_text('테스트 저장 실패',exact=True).wait_for()
     assert toggle.is_checked()
     page.unroute('**/api/admin/projects/*')
-    page.locator('.publish-control').click()
+    page.locator('#editor .publish-control').click()
     page.get_by_text('비공개로 전환했습니다.',exact=False).wait_for()
     assert not toggle.is_checked()
     assert page.locator('[name=title]').input_value()=='아직 저장하지 않은 제목'
@@ -91,7 +91,7 @@ with sync_playwright() as p:
     assert not toggle.is_checked()
     page.locator('[name=title]').fill('바로 공개하는 새 프로젝트')
     page.locator('[name=slug]').fill('instant-'+uuid.uuid4().hex[:8])
-    page.locator('.publish-control').click()
+    page.locator('#editor .publish-control').click()
     page.get_by_text('공개했습니다.',exact=False).wait_for()
     assert toggle.is_checked()
     assert not errors,errors

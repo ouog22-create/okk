@@ -113,10 +113,10 @@ class AdminTests(unittest.TestCase):
         self.assertEqual(self.post('order',{'ids':ids}).status_code,200)
         self.assertEqual(self.public()[0]['slug'],'project-06')
         self.assertEqual(self.post('order',{'ids':ids[:-1]}).status_code,409)
-        for path in ['/','/okk/','/okk/works','/okk/works/project-01','/works/project-01','/admin/','/b/','/b-1/','/okk/app.js']:
+        for path in ['/','/okk/','/okk/works','/okk/works/project-01','/works/project-01','/admin/','/okk/app.js']:
             with self.client.get(path) as response:
                 self.assertEqual(response.status_code,200,path)
-        for path in ['/data/okk.sqlite3','/cms.py','/media/../../cms.py']:
+        for path in ['/b/','/b-1/','/okk/b/','/okk/b-1/','/b/app.js','/b-1/style.css','/data/okk.sqlite3','/cms.py','/media/../../cms.py']:
             self.assertEqual(self.client.get(path).status_code,404,path)
         response=self.client.post('/api/contact',json={},headers=self.headers)
         self.assertEqual(response.status_code,400)

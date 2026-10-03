@@ -1,0 +1,256 @@
+.work-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px 26px;
+}
+
+.image-placeholder {
+    height: auto;
+    aspect-ratio: 1.28;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #0000000c;
+    display: grid;
+    place-items: center;
+}
+
+.lavender {
+    background: #e3dfef;
+    color: #635273;
+}
+
+.lime {
+    background: #e9edcd;
+    color: #566034;
+}
+
+.pink {
+    background: #f0dcd8;
+    color: #79514c;
+}
+
+.sky {
+    background: #dfe9ee;
+    color: #496674;
+}
+
+.placeholder-corner {
+    position: absolute;
+    left: 24px;
+    top: 22px;
+    font-size: 9px;
+    letter-spacing: 1px;
+}
+
+.placeholder-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    font-size: 11px;
+}
+
+.placeholder-icon {
+    border: 1px solid currentColor;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 32px;
+    font-weight: 300;
+    opacity: .65;
+}
+
+.placeholder-bottom {
+    position: absolute;
+    bottom: 23px;
+    left: 24px;
+    font-size: 9px;
+    letter-spacing: 2px;
+}
+
+.placeholder-number {
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+    font-size: 70px;
+    font-weight: 800;
+    letter-spacing: -5px;
+    opacity: .2;
+}
+
+.work-caption {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 18px;
+}
+
+.work-caption :is(h2, h3) {
+    font-size: 21px;
+    letter-spacing: -.5px;
+    margin: 0 0 8px;
+    overflow-wrap: anywhere;
+}
+
+.work-caption p {
+    font-size: 11px;
+    color: #62635b;
+    margin: 0;
+}
+
+.card-arrow {
+    font-size: 27px;
+    transition: transform .2s;
+}
+
+.work-card:hover .card-arrow {
+    transform: translate(3px, -3px);
+}
+
+.project-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    padding: 65px 0;
+    line-height: 1.8;
+}
+
+.project-info h2 {
+    font-size: 32px;
+    margin: 0;
+    letter-spacing: -1px;
+}
+
+.project-info p {
+    font-size: 14px;
+}
+
+.back-link {
+    font-size: 12px;
+}
+
+.detail>.image-placeholder {
+    aspect-ratio: 1.8;
+}
+
+.project-info dl {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid var(--line);
+    padding-top: 20px;
+    margin-top: 30px;
+}
+
+.project-info dt {
+    font-size: 10px;
+}
+
+.project-info dd {
+    font-size: 12px;
+    margin: 10px 0;
+}
+
+.detail>.pill {
+    margin-top: 40px;
+}
+
+.work-card > .project-image {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    display: block;
+    border-radius: inherit;
+}
+
+.detail > .project-image,
+.project-gallery .project-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 20px;
+}
+
+.project-copy {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.project-gallery {
+    margin: 32px 0;
+}
+
+.project-gallery figcaption {
+    padding: 14px 0;
+    color: #666;
+}
+
+.detail h1 {
+    overflow-wrap: anywhere;
+}
+
+@media(max-width:800px) {
+    .project-info {
+        grid-template-columns: 1fr;
+    }
+
+    .placeholder-corner,
+    .placeholder-bottom {
+        font-size: 7px;
+        left: 16px;
+    }
+
+    .placeholder-number {
+        font-size: 55px;
+    }
+
+    .placeholder-center {
+        font-size: 10px;
+    }
+}
+
+@media(max-width:540px) {
+    .work-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
+    .image-placeholder {
+        aspect-ratio: 1.2;
+    }
+
+    .placeholder-corner,
+    .placeholder-bottom {
+        font-size: 8px;
+    }
+
+    .work-caption {
+        margin-top: 14px;
+    }
+
+    .work-caption :is(h2, h3) {
+        font-size: 19px;
+    }
+
+    .work-caption p {
+        font-size: 10px;
+    }
+
+    .detail>.image-placeholder {
+        aspect-ratio: 1.2;
+    }
+
+    .project-info {
+        padding: 35px 0;
+        gap: 16px;
+    }
+
+    .project-info h2 {
+        font-size: 27px;
+    }
+
+    .project-info p {
+        font-size: 12px;
+    }
+}

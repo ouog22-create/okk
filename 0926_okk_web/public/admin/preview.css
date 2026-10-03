@@ -1,0 +1,9 @@
+.preview-label {
+    padding:24px 24px 0;
+    font-size:18px;
+}
+
+.preview-card {
+    padding:24px;
+    grid-template-columns:1fr;
+}

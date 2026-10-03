@@ -1,0 +1,25 @@
+{
+  "scope": "A site and A admin only",
+  "server_tests_passed": 16,
+  "style_comparison": {
+    "states": 50,
+    "differences": 0
+  },
+  "browser_checks": [
+    "check_admin_toggle.py",
+    "check_clients.py",
+    "check_editor_state.py",
+    "check_site_modules.py",
+    "check_review.py"
+  ],
+  "accessibility": {
+    "states": 11,
+    "violations": 0,
+    "js_errors": []
+  },
+  "preview_css_bytes": {
+    "before": 28980,
+    "after": 6478
+  },
+  "deployed": false
+}

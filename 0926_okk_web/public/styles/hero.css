@@ -1,0 +1,604 @@
+.hero {
+    padding: 26px 4.2% 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.hello-note {
+    font-size: 13px;
+    line-height: 1.5;
+    letter-spacing: 0;
+}
+
+.hero-stage {
+    position: relative;
+    display: grid;
+    place-items: center;
+    height: 530px;
+}
+
+.intro-circle {
+    position: absolute;
+    border-radius: 50%;
+    background: #e6edfc;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 450px;
+    height: 450px;
+}
+
+.mascot-position {
+    position: relative;
+    transform: rotate(var(--tilt, 0deg));
+    transition: transform .25s;
+}
+
+.mascot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    gap: 0;
+    width: 400px;
+    height: 500px;
+}
+
+.mascot-mark {
+    font-size: 105px;
+    line-height: 1;
+    color: var(--blue);
+    display: block;
+}
+
+.mascot-label {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--blue);
+    line-height: 1.9;
+}
+
+.mascot-label small {
+    font-size: 10px;
+    letter-spacing: 0;
+    color: #647898;
+}
+
+.hello-bubble {
+    position: absolute;
+    background: #d8f95a;
+    border: 1px solid var(--ink);
+    border-radius: 50%;
+    padding: 15px 20px;
+    font-weight: 700;
+    transform: rotate(12deg);
+    white-space: nowrap;
+    z-index: 2;
+    right: -65px;
+    top: 45px;
+}
+
+.hello-bubble span {
+    margin-left: 8px;
+}
+
+.orbit-note {
+    position: absolute;
+    top: 44%;
+    font-size: 10px;
+    letter-spacing: 1px;
+    transform: rotate(-9deg);
+    left: 3%;
+}
+
+.stage-sticker {
+    position: absolute;
+    top: 53%;
+    background: var(--blue);
+    color: var(--paper);
+    font-size: 17px;
+    font-weight: 900;
+    letter-spacing: -.5px;
+    line-height: 1;
+    padding: 22px 16px;
+    transform: rotate(12deg);
+    clip-path: polygon(15% 0, 85% 0, 100% 20%, 100% 80%, 85% 100%, 15% 100%, 0 80%, 0 20%);
+    right: 4%;
+}
+
+.click-note {
+    position: absolute;
+    left: 55%;
+    bottom: 0;
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: 13px;
+    color: #62635b;
+    transform: rotate(-7deg);
+}
+
+.hero-title {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 900;
+    color: var(--blue);
+    font-size: clamp(80px, 17.8vw, 290px);
+    letter-spacing: -.085em;
+    line-height: .92;
+    margin: 20px 0 25px;
+    white-space: nowrap;
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.hero-title>span {
+    display: inline-block;
+}
+
+.hero-title .word-space {
+    width: .23em;
+}
+
+.hero-title sup {
+    font-size: .115em;
+    letter-spacing: 0;
+    align-self: flex-start;
+    margin: .7em 0 0 .8em;
+}
+
+.hero-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 0 0 32px;
+    border-bottom: 0;
+}
+
+.hero-bottom p {
+    font-size: 13px;
+    line-height: 1.7;
+    margin: 0;
+}
+
+.hero-bottom a {
+    font-size: 10px;
+    letter-spacing: 1px;
+    display: flex;
+    gap: 50px;
+    align-items: center;
+}
+
+.hero-bottom a span {
+    font-size: 28px;
+}
+
+.intro .intro-circle {
+    animation: circle-in 1.2s cubic-bezier(.2, .7, .2, 1) both;
+}
+
+.intro .mascot-position {
+    animation: mascot-in 2s .35s both;
+}
+
+.intro .mascot-mark {
+    animation: wave .7s 1s 2;
+}
+
+.intro .hello-bubble {
+    animation: appear .3s 1.2s both;
+}
+
+.hero-title.title-playing>span:not(.word-space) {
+    animation: letter-drop .8s calc(.12s + var(--i)*.09s) cubic-bezier(.2, .7, .3, 1.15) both;
+}
+
+.reacting .mascot-mark {
+    animation: wave .7s;
+}
+
+.reacting .hello-bubble {
+    animation: bubble-pop .6s;
+}
+
+.reacting .mascot {
+    animation: hop .7s;
+}
+
+.reacting.frame-playing .mascot {
+    animation: none;
+}
+
+.ready .intro-circle {
+    opacity: .65;
+}
+
+.mascot-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+}
+
+.mascot-image[hidden] {
+    display: none;
+}
+
+.mascot-fallback {
+    color: var(--blue);
+    font-weight: 900;
+    font-size: 50px;
+}
+
+.mascot-fallback small {
+    font-size: 15px;
+}
+
+.intro .mascot-image {
+    animation: wave .7s 1s 2;
+    transform-origin: 50% 75%;
+}
+
+.intro .frame-playing .mascot-image {
+    animation: none;
+}
+
+.hero-friends {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    width: min(100%, 820px);
+}
+
+.hero-friend {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+}
+
+.hero-friend .mascot {
+    width: 100%;
+    height: 475px;
+    padding: 0;
+}
+
+.hero-friend .mascot-image {
+    mix-blend-mode: normal;
+    filter: drop-shadow(0 14px 12px #24498218);
+}
+
+.hero-friend.frame-playing .mascot-image {
+    transform: scale(1.28);
+    transform-origin: center;
+}
+
+.hero-friend .hello-bubble {
+    top: 12px;
+    right: 8px;
+    pointer-events: none;
+}
+
+.hero-friend .hello-bubble[hidden] {
+    display: none;
+}
+
+.hero-friend .mong-bubble {
+    top: 0;
+    right: 6%;
+    background: var(--blue);
+    color: white;
+    font-size: 30px;
+    padding: 18px 30px;
+    transform: rotate(9deg);
+}
+
+.mong-bubble::after {
+    content: '';
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background: var(--blue);
+    left: 24px;
+    bottom: -6px;
+    transform: rotate(35deg);
+    border-right: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+}
+
+.hero:has(.hero-friends) .stage-sticker {
+    right: 0;
+    top: 72%;
+}
+
+.hero-title.title-waiting>span:not(.word-space) {
+    opacity: 0;
+}
+
+@media(max-width:900px) {
+    .hero-friends {
+        max-width: 680px;
+        gap: 10px;
+    }
+
+    .hero-friend .mascot {
+        height: 390px;
+    }
+
+    .hero:has(.hero-friends) .orbit-note {
+        display: none;
+    }
+}
+
+@media(max-width:800px) {
+    .orbit-note {
+        font-size: 8px;
+    }
+
+    .stage-sticker {
+        font-size: 13px;
+    }
+}
+
+@media(max-width:767px) {
+    .hero-stage {
+        height: 440px;
+    }
+
+    .mascot {
+        width: 320px;
+        height: 400px;
+    }
+
+    .intro-circle {
+        width: 340px;
+        height: 340px;
+    }
+
+    .hello-bubble {
+        right: -12px;
+        top: 25px;
+        font-size: 12px;
+        padding: 12px;
+    }
+
+    .stage-sticker {
+        right: 0;
+        top: 70%;
+        font-size: 12px;
+        padding: 15px 10px;
+    }
+
+    .orbit-note {
+        display: none;
+    }
+}
+
+@media(max-width:540px) {
+    .hero {
+        padding: 24px 20px 0;
+    }
+
+    .hero-top {
+        font-size: 8px;
+        letter-spacing: .5px;
+    }
+
+    .hello-note {
+        font-size: 10px;
+    }
+
+    .mascot-mark {
+        font-size: 82px;
+    }
+
+    .mascot-label,
+    .mascot-label small {
+        font-size: 8px;
+    }
+
+    .orbit-note {
+        top: 15%;
+        font-size: 7px;
+        max-width: 75px;
+        line-height: 1.5;
+    }
+
+    .click-note {
+        font-size: 11px;
+        left: 35%;
+        bottom: 9px;
+    }
+
+    .hero-title {
+        font-size: 18vw;
+        margin: 18px -5px 25px;
+    }
+
+    .hero-title sup {
+        margin-left: .45em;
+    }
+
+    .hero-bottom {
+        align-items: center;
+        gap: 15px;
+        padding-bottom: 24px;
+    }
+
+    .hero-bottom p {
+        font-size: 10px;
+    }
+
+    .hero-bottom a {
+        font-size: 7px;
+        gap: 12px;
+        letter-spacing: .3px;
+    }
+
+    .hero-bottom a span {
+        font-size: 22px;
+    }
+
+    .hero:has(.hero-friends) .hero-stage {
+        height: 330px;
+    }
+
+    .hero-friends {
+        gap: 6px;
+    }
+
+    .hero-friend .mascot {
+        height: 255px;
+    }
+
+    .hero-friend .hello-bubble {
+        top: -9px;
+        right: 3px;
+        font-size: 10px;
+        padding: 10px 12px;
+    }
+
+    .hero-friend .mong-bubble {
+        font-size: 20px;
+        top: -17px;
+        padding: 12px 21px;
+    }
+
+    .hero:has(.hero-friends) .stage-sticker {
+        top: auto;
+        bottom: 9px;
+        font-size: 9px;
+        padding: 10px;
+    }
+
+    .hero:has(.hero-friends) .click-note {
+        left: 24%;
+        bottom: 3px;
+    }
+}
+
+@media(max-width:359px) {
+    .mascot {
+        width: 280px;
+        height: 350px;
+    }
+
+    .hero-stage {
+        height: 390px;
+    }
+
+    .intro-circle {
+        width: 280px;
+        height: 280px;
+    }
+}
+
+@media(prefers-reduced-motion:reduce) {
+    .mascot-position {
+        transform: none !important;
+    }
+
+    .hero-title.title-waiting>span:not(.word-space) {
+        opacity: 1;
+    }
+}
+
+@keyframes circle-in {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+    }
+
+    65% {
+        transform: translate(-50%, -50%) scale(1.7);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+@keyframes mascot-in {
+    0% {
+        opacity: 0;
+        transform: translateY(65px) scale(.3);
+    }
+
+    40% {
+        opacity: 1;
+        transform: translateY(30px) scale(1.2);
+    }
+
+    100% {
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes letter-drop {
+    0% {
+        opacity: 0;
+        transform: translateY(-150px) rotate(-12deg);
+    }
+
+    75% {
+        opacity: 1;
+        transform: translateY(6px) rotate(2deg);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) rotate(0);
+    }
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+        scale: .6;
+    }
+
+    to {
+        opacity: 1;
+        scale: 1;
+    }
+}
+
+@keyframes wave {
+    0%,
+            100% {
+        transform: rotate(0);
+    }
+
+    25%,
+            75% {
+        transform: rotate(22deg);
+    }
+
+    50% {
+        transform: rotate(-16deg);
+    }
+}
+
+@keyframes hop {
+    50% {
+        transform: translateY(-14px) rotate(-4deg);
+    }
+}
+
+@keyframes bubble-pop {
+    50% {
+        scale: 1.14;
+    }
+}

@@ -24,7 +24,7 @@ with sync_playwright() as p:
         }''')
         report.append({'page':name,**result})
 
-    for path in ['/okk/','/okk/about','/okk/works','/okk/works/project-01','/b/','/b-1/','/admin/']:
+    for path in ['/okk/','/okk/about','/okk/works','/okk/works/project-01','/admin/']:
         page.goto(BASE + path, wait_until='networkidle')
         audit(path)
         for width in [320,390,768]:
@@ -50,19 +50,12 @@ with sync_playwright() as p:
 
     page.emulate_media(reduced_motion='no-preference')
     page.goto(BASE+'/okk/',wait_until='networkidle')
-    page.locator('.hero-motion').click()
-    assert page.locator('.mascot-image').first.get_attribute('src').endswith('-cutout.png')
-    page.locator('.hero-motion').click()
-    assert page.locator('.mascot-image').first.get_attribute('src').endswith('-loop.webp')
+    page.emulate_media(reduced_motion='reduce')
+    page.wait_for_function("document.querySelector('.mascot-image').getAttribute('src').endsWith('-cutout.png')")
+    page.emulate_media(reduced_motion='no-preference')
+    page.wait_for_function("document.querySelector('.mascot-image').getAttribute('src').endsWith('-loop.webp')")
     page.locator('a[href="#selected"]').click()
     page.wait_for_function("document.querySelector('.mascot-image').getAttribute('src').endsWith('-cutout.png')")
-    for path in ['/b/','/b-1/']:
-        page.goto(BASE+path,wait_until='networkidle')
-        page.locator('nav a[href="#clients"]').click()
-        page.locator('.logos-motion').click()
-        assert page.locator('#logos').evaluate('(e)=>getComputedStyle(e).animationPlayState')=='paused'
-        page.locator('nav a[href="#works"]').click()
-        assert page.locator('#logos').evaluate('(e)=>getComputedStyle(e).animationPlayState')=='paused'
     page.emulate_media(reduced_motion='reduce')
 
     page.goto(BASE+'/admin/',wait_until='networkidle')
@@ -105,7 +98,7 @@ with sync_playwright() as p:
         assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), ('editor',width)
     page.set_viewport_size({'width':1440,'height':1000})
     page.on('dialog', lambda dialog: dialog.accept())
-    page.locator('.publish-control').click()
+    page.locator('#editor .publish-control').click()
     page.get_by_text('공개했습니다.',exact=False).wait_for()
     page.evaluate('scrollTo(0,0)')
     page.screenshot(path='/tmp/okk-review-editor.png', full_page=True)

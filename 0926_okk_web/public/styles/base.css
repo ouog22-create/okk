@@ -1,0 +1,164 @@
+:root {
+    --blue: #004eea;
+    --ink: #20201e;
+    --paper: #f8f8f2;
+    --line: #d9d9d1;
+    font-family: Pretendard, 'Apple SD Gothic Neo', Arial, sans-serif;
+    color: var(--ink);
+    background: var(--paper);
+    font-synthesis: none;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 95px;
+}
+
+body {
+    margin: 0;
+}
+
+button {
+    font: inherit;
+    -webkit-tap-highlight-color: transparent;
+    cursor: pointer;
+    color: inherit;
+    border: 0;
+    background: none;
+}
+
+input,
+textarea {
+    font: inherit;
+}
+
+a {
+    -webkit-tap-highlight-color: transparent;
+    color: inherit;
+    text-decoration: none;
+}
+
+button:disabled {
+    cursor: wait;
+    opacity: .5;
+}
+
+a:focus-visible,
+button:focus-visible {
+    outline: 3px solid var(--blue);
+    outline-offset: 6px;
+}
+
+input:focus,
+textarea:focus {
+    outline: 2px solid var(--blue);
+    outline-offset: 2px;
+}
+
+::selection {
+    background: #d5fa3e;
+    color: var(--blue);
+}
+
+.eyebrow {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+}
+
+.pill {
+    display: inline-flex;
+    gap: 40px;
+    align-items: center;
+    border: 1px solid var(--ink);
+    border-radius: 30px;
+    padding: 15px 22px;
+    font-size: 12px;
+    transition: background .2s, color .2s;
+}
+
+.pill:hover {
+    background: var(--ink);
+    color: white;
+}
+
+.blue {
+    color: var(--blue);
+}
+
+.page-section {
+    padding: 70px 4.2% 100px;
+    min-height: 65vh;
+}
+
+.page-intro {
+    margin: 30px 0 60px;
+}
+
+.page-intro h1 {
+    font-size: clamp(60px, 9vw, 130px);
+    line-height: 1;
+    letter-spacing: -.07em;
+    margin: 25px 0;
+}
+
+.page-intro h1 em {
+    font-family: Georgia, serif;
+    font-weight: 400;
+    color: var(--blue);
+}
+
+.page-intro p {
+    font-size: 15px;
+    line-height: 1.8;
+}
+
+.muted {
+    color: #62635b;
+}
+
+:target {
+    scroll-margin-top: 110px;
+}
+
+@media(max-width:540px) {
+    .eyebrow {
+        font-size: 8px;
+        letter-spacing: 1px;
+    }
+
+    .pill {
+        padding: 12px 14px;
+        font-size: 10px;
+        gap: 14px;
+    }
+
+    .page-section {
+        padding: 35px 20px 60px;
+    }
+
+    .page-intro h1 {
+        font-size: 60px;
+    }
+
+    .page-intro p {
+        font-size: 12px;
+    }
+}
+
+@media(prefers-reduced-motion:reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+}

@@ -1,0 +1,183 @@
+.draft-note {
+    font-size: 11px;
+    color: #62635b;
+    display: block;
+    margin-top: 20px;
+}
+
+.about-copy {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    padding: 65px 0;
+    line-height: 1.8;
+}
+
+.about-copy h2 {
+    font-size: 32px;
+    margin: 0;
+    letter-spacing: -1px;
+}
+
+.about-copy p {
+    font-size: 14px;
+}
+
+.about-copy .pill {
+    margin-top: 20px;
+}
+
+.friends-image {
+    margin: 0;
+    background: #eef3fc;
+    display: grid;
+    place-items: center;
+    padding: 30px;
+}
+
+.friends-image img {
+    width: min(100%, 480px);
+    height: auto;
+    mix-blend-mode: multiply;
+}
+
+.characters-section {
+    border-top: 1px solid var(--line);
+    padding-top: 65px;
+}
+
+.characters-section .section-heading h2 {
+    font-size: clamp(34px, 4vw, 58px);
+}
+
+.character-profile {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7%;
+    align-items: center;
+    padding: 45px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.character-poster {
+    display: block;
+    width: 100%;
+    height: auto;
+    mix-blend-mode: multiply;
+}
+
+.character-story h3 {
+    font-size: 42px;
+    letter-spacing: -2px;
+    margin: 20px 0 30px;
+}
+
+.character-story h3 span {
+    display: block;
+    font-size: 16px;
+    letter-spacing: 1px;
+    color: var(--blue);
+    margin-top: 10px;
+}
+
+.character-story p {
+    font-size: 15px;
+    line-height: 1.95;
+    word-break: keep-all;
+}
+
+.character-story .character-english {
+    font-size: 12px;
+    color: #5e646b;
+    line-height: 1.8;
+    margin-top: 24px;
+}
+
+.character-story details {
+    border-top: 1px solid var(--line);
+    margin-top: 30px;
+}
+
+.character-story summary {
+    cursor: pointer;
+    font-size: 12px;
+    padding: 18px 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.character-story summary:focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 4px;
+}
+
+.character-story details img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.character-story details[open] summary span {
+    transform: rotate(45deg);
+}
+
+@media(max-width:800px) {
+    .about-copy {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media(max-width:540px) {
+    .about .page-intro h1 {
+        font-size: 49px;
+    }
+
+    .draft-note {
+        font-size: 10px;
+    }
+
+    .about-copy {
+        padding: 35px 0;
+        gap: 16px;
+    }
+
+    .about-copy h2 {
+        font-size: 27px;
+    }
+
+    .about-copy p {
+        font-size: 12px;
+    }
+
+    .character-profile {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        padding: 30px 0;
+    }
+
+    .character-story h3 {
+        font-size: 34px;
+        margin: 16px 0 22px;
+    }
+
+    .character-story p {
+        font-size: 13px;
+    }
+
+    .character-story .character-english {
+        font-size: 11px;
+    }
+
+    .characters-section {
+        padding-top: 35px;
+    }
+
+    .friends-image {
+        padding: 15px;
+    }
+
+    .character-poster {
+        max-width: 380px;
+        margin: auto;
+    }
+}

@@ -1,0 +1,1 @@
+export const contactSection = () => `<section class="contact-section"><div class="contact-top"><span class="eyebrow">HAVE SOMETHING IN MIND?</span><span>좋은 시작은, 가벼운 인사에서.</span></div><button data-contact class="big-contact">Let’s make<br><span>something <i>okk!</i></span><b>↗</b></button></section>`;
