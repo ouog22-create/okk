@@ -254,3 +254,16 @@
         font-size: 12px;
     }
 }
+
+.works-loading {
+    margin-top: 32px;
+    text-align: center;
+}
+
+#works-more[hidden] {
+    display: none;
+}
+
+#works-sentinel {
+    height: 1px;
+}

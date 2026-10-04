@@ -74,3 +74,7 @@ A안 작업 데이터는 `/admin/`에서 관리하며 SQLite에 저장합니다.
 JavaScript에서 생성하는 사이트·이미지·API URL은 `shared/paths.js`를 사용합니다. HTML의 초기 리소스·정적 링크와 Flask의 라우트는 명시적 주소를 유지하므로 배포 경로를 변경할 때 함께 확인해야 합니다. `/`와 `/okk/` 기존 진입 경로는 유지합니다.
 
 실행 계획과 검증 결과는 [REFACTOR_PLAN.md](REFACTOR_PLAN.md)를 참고하세요.
+
+## Works 추가 로딩
+
+`/okk/works`는 `GET /api/projects?limit=10&offset=0`으로 10건을 먼저 조회하고 목록 하단에서 다음 10건을 추가합니다. `next_offset`이 `null`이면 조회를 종료합니다. 로딩 실패 시 기존 카드를 유지하며 재시도할 수 있습니다. 목록을 떠날 때 관찰자를 정리하고 뒤로 돌아오면 이미 조회한 카드를 재사용합니다. 홈과 상세 화면의 기존 조회는 유지합니다.

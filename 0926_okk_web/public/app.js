@@ -3,6 +3,7 @@ import { createCollection } from './site/data.js';
 import { homePage } from './site/pages/home.js';
 import { aboutPage } from './site/pages/about.js';
 import { worksPage } from './site/pages/works.js';
+import { createWorksFeed } from './site/works-feed.js';
 import { projectPage } from './site/pages/project.js';
 import { projectCards } from './site/projects.js';
 import { clientLogos } from './site/clients.js';
@@ -17,6 +18,8 @@ const main = document.querySelector('#main');
 const header = document.querySelector('#site-header');
 const projects = createCollection('projects');
 const clients = createCollection('clients');
+const worksFeed = createWorksFeed();
+let projectsRequest;
 let cleanup;
 
 function render() {
@@ -32,7 +35,8 @@ function render() {
         document.title = 'STUDIO OKK — A little different. A lot of fun.';
         cleanup = setupHero(hero);
     } else if (path === '/works') {
-        main.innerHTML = worksPage(projects.state);
+        main.innerHTML = worksPage();
+        cleanup = worksFeed.mount(main);
         document.title = 'Works — STUDIO OKK';
     } else if (path === '/about') {
         main.innerHTML = aboutPage();
@@ -42,6 +46,7 @@ function render() {
         main.innerHTML = page.markup;
         document.title = page.title;
     }
+    if (path === '/' || path.startsWith('/works/')) loadProjects();
 }
 
 setupContact(document.querySelector('#contact'));
@@ -49,12 +54,15 @@ setupNavigation({ main, render });
 document.querySelector('#year').textContent = new Date().getFullYear();
 render();
 
-projects.load().then(() => {
-    const path = normalizeSitePath(location.pathname);
-    const grid = main.querySelector('.work-grid');
-    if (grid && (path === '/' || path === '/works')) grid.innerHTML = projectCards(projects.state, path === '/');
-    else if (path.startsWith('/works/')) render();
-});
+function loadProjects() {
+    if (projectsRequest) return;
+    projectsRequest = projects.load().then(() => {
+        const path = normalizeSitePath(location.pathname);
+        const grid = main.querySelector('.work-grid');
+        if (grid && path === '/') grid.innerHTML = projectCards(projects.state, true);
+        else if (path.startsWith('/works/')) render();
+    });
+}
 clients.load().then(() => {
     const grid = main.querySelector('.logos');
     if (grid) grid.innerHTML = clientLogos(clients.state);
