@@ -1,4 +1,4 @@
-export const SITE_BASE = '/okk';
+export const SITE_BASE = '';
 const API_BASE = '/api';
 const join = (base, path = '') => `${base}/${String(path).replace(/^\/+/, '')}`;
 
