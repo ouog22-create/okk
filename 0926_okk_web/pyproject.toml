@@ -1,2 +1,12 @@
+[project]
+name = "okk"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+  "Flask>=3.1",
+  "Pillow>=10.0",
+  "psycopg[binary]>=3.2"
+]
+
 [tool.vercel]
 entrypoint = "server:app"
