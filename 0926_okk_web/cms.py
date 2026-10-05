@@ -246,7 +246,7 @@ def create_app(data_dir=None):
         identity = secrets.token_hex(12)
         try:
             draft = json.dumps(p, ensure_ascii=False)
-            db().execute('INSERT INTO projects(id,slug,draft,published,position) VALUES(?,?,?,?,(SELECT COALESCE(MAX(position),0)+1 FROM projects))', (identity, p['slug'], draft, draft if publish else None))
+            db().execute('INSERT INTO projects(id,slug,draft,published,position) VALUES(?,?,?,?,(SELECT COALESCE(MIN(position),0)-1 FROM projects))', (identity, p['slug'], draft, draft if publish else None))
             if publish:
                 sync_public_media(identity, draft)
             db().commit()

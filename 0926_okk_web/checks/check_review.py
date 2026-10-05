@@ -74,7 +74,7 @@ with sync_playwright() as p:
     page.locator('#save').click()
     assert page.locator('[name=title]').evaluate('(e)=>e===document.activeElement')
     page.locator('[name=title]').fill(TITLE)
-    page.locator('[name=slug]').fill('review-' + uuid.uuid4().hex[:8])
+    assert page.locator('[name=slug]').count() == 0
     image = str(Path(__file__).resolve().parents[1]/'public/assets/star_b.png')
     page.locator('#gallery-upload').set_input_files([image,image])
     page.locator('#gallery .image-block').nth(1).wait_for()

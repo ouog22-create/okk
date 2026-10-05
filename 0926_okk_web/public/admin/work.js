@@ -1,6 +1,7 @@
 import { esc } from '../shared/html.js';
 import { $, notice, focusOn, run, isBusy } from './ui.js';
 import { api } from './api.js';
+import { moveRow } from './order.js';
 
 export function createWorkEditor() {
     const form = $('#project-form');
@@ -49,12 +50,12 @@ export function createWorkEditor() {
     }
 
     function blank() {
-        return { title: '', slug: '', subtitle: 'STUDIO OKK / WORK', summary: '', client: '', year: '', scope: '', description: '', color: 'lavender', featured: true, thumbnail: '', cover: '', gallery: [] };
+        return { title: '', slug: `project-${crypto.randomUUID()}`, subtitle: 'STUDIO OKK / WORK', summary: '', client: '', year: '', scope: '', description: '', color: 'lavender', featured: true, thumbnail: '', cover: '', gallery: [] };
     }
 
     function values() {
         return { ...current.draft, ...Object.fromEntries(new FormData(form)), subtitle: 'STUDIO OKK / WORK',
-            featured: form.elements.featured.checked, slug: form.elements.slug.value, gallery: current.draft.gallery };
+            featured: form.elements.featured.checked, slug: current.draft.slug, gallery: current.draft.gallery };
     }
 
     function preview() {
@@ -80,7 +81,6 @@ export function createWorkEditor() {
             if (key === 'featured') form.elements[key].checked = value;
             else form.elements[key].value = value;
         }
-        form.elements.slug.readOnly = !!current.id;
         $('#editor-title').textContent = current.id ? '프로젝트 편집' : '새 프로젝트 등록';
         $('#editor-state').textContent = current.id ? state(current) : '새 프로젝트';
         syncPublish();
@@ -120,7 +120,6 @@ export function createWorkEditor() {
         const result = await api(current.id ? 'projects/' + current.id : 'projects', current.id ? { action: 'save', version: current.version, project, publish } : { ...project, publish });
         current = result.project;
         dirty = false;
-        form.elements.slug.readOnly = true;
         $('#editor-state').textContent = state(current);
         $('#editor-title').textContent = '프로젝트 편집';
         syncPublish();
@@ -169,19 +168,16 @@ export function createWorkEditor() {
         if (action === 'edit') { notice(); showEditor(project); return; }
         run(async () => {
             if (action === 'up' || action === 'down') {
-                const ids = projects.filter(project => !project.trashed).map(project => project.id);
-                const index = ids.indexOf(project.id), next = index + (action === 'up' ? -1 : 1);
-                if (next < 0 || next >= ids.length) { notice('이미 목록의 끝입니다.'); return; }
-                [ids[index], ids[next]] = [ids[next], ids[index]];
-                await api('order', { ids });
+                const moved = await moveRow(projects, project.id, action, $('#list'), 'data-id', ids => api('order', { ids }));
+                if (!moved) { notice('이미 목록의 끝입니다.'); return; }
                 notice('노출 순서를 변경했습니다.');
             } else {
                 const question = action === 'trash' ? '휴지통으로 이동하고 사이트에서 숨길까요?' : action === 'unpublish' ? '사이트에서 비공개로 전환할까요?' : '초안 상태로 복구할까요?';
                 if (!confirm(question)) return;
                 await api('projects/' + project.id, { action, version: project.version });
                 notice(action === 'restore' ? '초안으로 복구했습니다.' : '변경했습니다.');
+                await refresh();
             }
-            await refresh();
             focusOn($(`[data-id="${project.id}"] [data-action="${action}"]`) || $(`[data-id="${project.id}"] [data-action="edit"]`) || $('#list-title'));
         });
     };

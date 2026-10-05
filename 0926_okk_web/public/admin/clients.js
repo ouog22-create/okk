@@ -1,6 +1,7 @@
 import { esc } from '../shared/html.js';
 import { $, notice, focusOn, run, isBusy } from './ui.js';
 import { api } from './api.js';
+import { moveRow } from './order.js';
 
 export function createClientsEditor() {
     let dirty = false, uploads = 0;
@@ -69,16 +70,14 @@ export function createClientsEditor() {
         if (action === 'edit') { editClient(item); return; }
         run(async () => {
             if (action === 'up' || action === 'down') {
-                const ids = clients.filter(item => !item.trashed).map(item => item.id);
-                const index = ids.indexOf(item.id), next = index + (action === 'up' ? -1 : 1);
-                if (next < 0 || next >= ids.length) { notice('이미 목록의 끝입니다.'); return; }
-                [ids[index], ids[next]] = [ids[next], ids[index]];
-                await api('clients/order', { ids });
+                const moved = await moveRow(clients, item.id, action, $('#client-list'), 'data-client-id', ids => api('clients/order', { ids }));
+                if (!moved) { notice('이미 목록의 끝입니다.'); return; }
             } else {
                 if (!confirm(action === 'trash' ? '휴지통으로 이동하고 메인 화면에서 숨길까요?' : '비노출 상태로 복구할까요?')) return;
                 await api('clients/' + item.id, { version: item.version, action });
+                await refreshClients();
             }
-            await refreshClients(); notice('변경했습니다.');
+            notice('변경했습니다.');
             focusOn($(`[data-client-id="${item.id}"] [data-client-action="${action}"]`) || $('#clients-title'));
         });
     };

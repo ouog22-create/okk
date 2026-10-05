@@ -48,19 +48,30 @@ class AdminTests(unittest.TestCase):
     def public(self):
         return self.visitor.get('/api/projects').json['projects']
 
+    def test_new_projects_prepend_without_reordering_existing_projects(self):
+        before = [p['id'] for p in self.client.get('/api/admin/projects').json['projects']]
+        first = self.new_project()
+        result = self.post('projects', {**first['draft'], 'slug': 'newest-work', 'publish': True})
+        self.assertEqual(result.status_code, 201)
+        second = result.json['project']
+        after = [p['id'] for p in self.client.get('/api/admin/projects').json['projects']]
+        self.assertEqual(after, [second['id'], first['id'], *before])
+        self.action(first, 'publish')
+        self.assertEqual([p['slug'] for p in self.public()][:2], ['newest-work', 'test-work'])
+
     def test_draft_publish_edit_unpublish_restore_persistence(self):
         p = self.new_project()
         self.assertEqual(len(self.public()), 6)
         p = self.action(p, 'publish')
-        self.assertEqual(self.public()[-1]['title'], '새 작업 <script>')
+        self.assertEqual(self.public()[0]['title'], '새 작업 <script>')
         p['draft']['title'] = '수정 초안'
         p = self.action(p, 'save', project=p['draft'])
         self.assertTrue(p['dirty'])
-        self.assertEqual(self.public()[-1]['title'], '새 작업 <script>')
+        self.assertEqual(self.public()[0]['title'], '새 작업 <script>')
         p = self.action(p, 'publish')
-        self.assertEqual(self.public()[-1]['title'], '수정 초안')
+        self.assertEqual(self.public()[0]['title'], '수정 초안')
         restarted = create_app(self.tmp.name).test_client()
-        self.assertEqual(restarted.get('/api/projects').json['projects'][-1]['title'], '수정 초안')
+        self.assertEqual(restarted.get('/api/projects').json['projects'][0]['title'], '수정 초안')
         p = self.action(p, 'trash')
         self.assertEqual(len(self.public()), 6)
         p = self.action(p, 'restore')
@@ -98,7 +109,7 @@ class AdminTests(unittest.TestCase):
         p = self.action(p,'publish')
         response=self.visitor.get(url)
         self.assertEqual(response.status_code,200)
-        self.assertEqual(response.headers['Cache-Control'],'no-store')
+        self.assertEqual(response.headers['Cache-Control'],'private, max-age=300')
         response.close()
         self.action(p,'unpublish')
         self.assertEqual(self.visitor.get(url).status_code,404)
@@ -195,14 +206,14 @@ class AdminTests(unittest.TestCase):
         p['draft']['title'] = '공개 토글 ON'
         p = self.action(p, 'save', project=p['draft'], publish=True)
         self.assertTrue(p['published'])
-        self.assertEqual(self.public()[-1]['title'], '공개 토글 ON')
+        self.assertEqual(self.public()[0]['title'], '공개 토글 ON')
         p['draft']['title'] = '공개 상태에서 저장'
         p = self.action(p, 'save', project=p['draft'], publish=True)
-        self.assertEqual(self.public()[-1]['title'], '공개 상태에서 저장')
+        self.assertEqual(self.public()[0]['title'], '공개 상태에서 저장')
         p['draft']['title'] = ''
         failed = self.post('projects/'+p['id'], dict(action='save',version=p['version'],project=p['draft'],publish=True))
         self.assertEqual(failed.status_code,400)
-        self.assertEqual(self.public()[-1]['title'], '공개 상태에서 저장')
+        self.assertEqual(self.public()[0]['title'], '공개 상태에서 저장')
         self.action(p, 'unpublish')
         self.assertEqual(len(self.public()),6)
 
@@ -212,7 +223,7 @@ class AdminTests(unittest.TestCase):
         self.assertEqual(response.status_code,201)
         p = response.json['project']
         self.assertTrue(p['published'])
-        self.assertEqual(self.public()[-1]['subtitle'],'STUDIO OKK / WORK')
+        self.assertEqual(self.public()[0]['subtitle'],'STUDIO OKK / WORK')
         invalid = self.post('projects',{**project,'slug':'bad-toggle','publish':'true'})
         self.assertEqual(invalid.status_code,400)
 
@@ -225,7 +236,7 @@ class AdminTests(unittest.TestCase):
             with closing(sqlite3.connect(backup/'okk.sqlite3')) as con:
                 self.assertEqual(con.execute('SELECT COUNT(*) FROM sessions').fetchone()[0],0)
             restored = create_app(backup).test_client()
-            self.assertEqual(restored.get('/api/projects').json['projects'][-1]['slug'],p['draft']['slug'])
+            self.assertEqual(restored.get('/api/projects').json['projects'][0]['slug'],p['draft']['slug'])
 
 if __name__ == '__main__':
     unittest.main()

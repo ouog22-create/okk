@@ -29,10 +29,12 @@ with sync_playwright() as p:
     page.get_by_text('필수 입력 항목을 확인해주세요.',exact=True).wait_for()
     assert not toggle.is_checked()
     assert page.locator('[name=title]').evaluate('(e)=>e===document.activeElement')
-    slug='toggle-'+uuid.uuid4().hex[:8]
     page.locator('[name=title]').fill('토글 확인 프로젝트')
-    page.locator('[name=slug]').fill(slug)
-    page.locator('#save').click()
+    assert page.locator('[name=slug]').count() == 0
+    with page.expect_response(lambda response: response.url.endswith('/api/admin/projects') and response.request.method == 'POST') as saved:
+        page.locator('#save').click()
+    slug = saved.value.json()['project']['draft']['slug']
+    assert slug.startswith('project-')
     page.get_by_text('저장했습니다. 현재 비공개 상태입니다.',exact=True).wait_for()
     assert page.locator('#notice').evaluate('(e)=>getComputedStyle(e).position')=='fixed'
     toast_box=page.locator('#notice').bounding_box()
@@ -90,7 +92,7 @@ with sync_playwright() as p:
     page.locator('#new').click()
     assert not toggle.is_checked()
     page.locator('[name=title]').fill('바로 공개하는 새 프로젝트')
-    page.locator('[name=slug]').fill('instant-'+uuid.uuid4().hex[:8])
+    assert page.locator('[name=slug]').count() == 0
     page.locator('#editor .publish-control').click()
     page.get_by_text('공개했습니다.',exact=False).wait_for()
     assert toggle.is_checked()
