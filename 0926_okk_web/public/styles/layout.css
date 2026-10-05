@@ -135,7 +135,9 @@ nav button > span:not(.nav-label) {
 .work-view-toggle:hover,
 .work-view-toggle[aria-pressed="true"] { color: white; background: var(--ink); border-color: var(--ink); }
 .work-view-toggle span:last-child { font-size: 15px; line-height: 1; }
-.works-feed-heading { display: flex; justify-content: flex-end; margin: -36px 0 32px; }
+.works-intro-bottom { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.works-intro-bottom p { margin: 0; }
+.works-feed-heading { display: flex; flex: 0 0 auto; }
 
 @media (prefers-reduced-motion: reduce) {
     nav :is(a, button):hover .nav-letter,
@@ -295,7 +297,6 @@ footer>a:last-child {
 }
 
 @media(max-width:540px) {
-    .works-feed-heading { margin: -30px 0 24px; }
     header {
         margin: 0 20px;
         height: 80px;
