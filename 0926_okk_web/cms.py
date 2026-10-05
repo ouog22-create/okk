@@ -336,14 +336,21 @@ def create_app(data_dir=None):
     def media(name):
         if not re.fullmatch(r'[a-f0-9]{32}\.webp', name):
             abort(404)
-        if not session() and not db().execute('SELECT 1 FROM published_media WHERE media_id=? LIMIT 1', (name,)).fetchone() and not db().execute('SELECT 1 FROM clients WHERE logo=? AND visible=1 AND trashed=0 LIMIT 1', ('/media/' + name,)).fetchone():
+        is_public = bool(db().execute('SELECT 1 FROM published_media WHERE media_id=? LIMIT 1', (name,)).fetchone() or db().execute('SELECT 1 FROM clients WHERE logo=? AND visible=1 AND trashed=0 LIMIT 1', ('/media/' + name,)).fetchone())
+        if not session() and not is_public:
             abort(404)
         if storage:
             try:
-                return send_file(io.BytesIO(storage.load(name)), mimetype='image/webp')
+                response = send_file(io.BytesIO(storage.load(name)), mimetype='image/webp')
             except FileNotFoundError:
                 abort(404)
-        return send_from_directory(data / 'uploads', name)
+        else:
+            response = send_from_directory(data / 'uploads', name)
+        # Keep authorization on every request while allowing the visitor's browser
+        # to reuse published images briefly across page navigations.
+        if is_public:
+            response.headers['Cache-Control'] = 'private, max-age=300'
+        return response
 
     @app.post('/api/contact')
     def contact():

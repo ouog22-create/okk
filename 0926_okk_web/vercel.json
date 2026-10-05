@@ -4,6 +4,20 @@
   "rewrites": [
     { "source": "/okk/assets/:path*", "destination": "/assets/:path*" }
   ],
+  "headers": [
+    {
+      "source": "/assets/:path*",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=3600, stale-while-revalidate=86400" }
+      ]
+    },
+    {
+      "source": "/okk/assets/:path*",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=3600, stale-while-revalidate=86400" }
+      ]
+    }
+  ],
   "functions": {
     "server.py": {
       "maxDuration": 60,
