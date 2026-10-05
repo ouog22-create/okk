@@ -3,19 +3,19 @@ import { assetPath as asset, projectPath, sitePath } from './shared/paths.js';
 
 const colors = ['lavender', 'lime', 'pink', 'sky'];
 
-export function image(src, alt, color = 'lavender', priority = false) {
+export function image(src, alt, color = 'lavender', priority = false, eager = priority) {
     if (/^\/media\/[a-f0-9]{32}\.webp$/.test(src || '')) {
-        const loading = priority ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"';
+        const loading = priority ? 'loading="eager" fetchpriority="high"' : eager ? 'loading="eager"' : 'loading="lazy"';
         return `<img class="project-image" src="${src}" alt="${esc(alt)}" ${loading} decoding="async">`;
     }
     return `<div class="image-placeholder ${colors.includes(color) ? color : 'lavender'}"><span class="placeholder-center">프로젝트 이미지 준비 중</span></div>`;
 }
 
-export function card(project, heading = 3) {
+export function card(project, heading = 3, priority = false) {
     const level = heading === 2 ? 2 : 3;
     return [
         `<a class="work-card" href="${projectPath(project.slug)}">`,
-        image(project.thumbnail || project.cover, '', project.color),
+        image(project.thumbnail || project.cover, '', project.color, priority),
         `<div class="work-caption"><div><h${level}>${esc(project.title)}</h${level}>`,
         `<p>${esc(project.summary)}</p></div><span class="card-arrow" aria-hidden="true">↗</span></div></a>`,
     ].join('');
@@ -25,9 +25,9 @@ export function detail(project) {
     const metadata = [['CLIENT', project.client], ['YEAR', project.year], ['SCOPE', project.scope]]
         .filter(([, value]) => value)
         .map(([label, value]) => `<div><dt>${label}</dt><dd>${esc(value)}</dd></div>`).join('');
-    const gallery = (project.gallery || []).map(item => [
+    const gallery = (project.gallery || []).map((item, index) => [
         '<figure class="project-gallery">',
-        image(item.src, item.alt || project.title),
+        image(item.src, item.alt || project.title, project.color, false, index === 0),
         item.caption ? `<figcaption>${esc(item.caption)}</figcaption>` : '',
         '</figure>',
     ].join('')).join('');

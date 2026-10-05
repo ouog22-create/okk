@@ -10,6 +10,7 @@ export function setupHero(hero) {
     let timers = [], scrolled = false;
     const updateImages = [];
     let heroVisible = true;
+    let disposed = false;
     function syncMotion() {
         updateImages.forEach(updateImage => updateImage());
     }
@@ -49,11 +50,28 @@ export function setupHero(hero) {
         const button = $('.mascot', friend), img = $('.mascot-image', friend);
         const still = img.getAttribute('src');
         const animated = asset(`${button.dataset.character}-loop.webp`);
+        let animationReady = false;
+        let animationRequested = false;
+        let animationFailed = false;
+        const preload = new Image();
+        preload.fetchPriority = 'low';
+        preload.onload = () => {
+            if (disposed) return;
+            animationReady = true;
+            updateImage();
+        };
+        preload.onerror = () => { animationFailed = true; };
+        const requestAnimation = () => {
+            if (disposed || animationRequested || animationFailed || reduced.matches || !heroVisible || document.hidden || !img.complete || !img.naturalWidth) return;
+            animationRequested = true;
+            preload.src = animated;
+        };
         const updateImage = () => {
-            const playing = !reduced.matches && heroVisible && !document.hidden;
+            const playing = animationReady && !animationFailed && !reduced.matches && heroVisible && !document.hidden;
             const next = playing ? animated : still;
             if (img.getAttribute('src') !== next) img.src = next;
             friend.classList.toggle('frame-playing', playing);
+            if (!animationRequested) timers.push(setTimeout(requestAnimation, 1200));
         };
         updateImages.push(updateImage);
         button.addEventListener('click', () => {
@@ -67,9 +85,13 @@ export function setupHero(hero) {
         const imageFailed = () => { if (img.getAttribute('src') !== still) return; img.hidden = true; $('.mascot-fallback', friend).hidden = false; finish(); };
         img.addEventListener('error', () => {
             if (img.getAttribute('src') === animated) {
+                animationFailed = true;
                 img.src = still;
                 friend.classList.remove('frame-playing');
             } else imageFailed();
+        });
+        img.addEventListener('load', () => {
+            if (!animationRequested && !disposed) timers.push(setTimeout(requestAnimation, 1200));
         });
         if (img.complete && !img.naturalWidth) imageFailed();
         updateImage();
@@ -88,5 +110,5 @@ export function setupHero(hero) {
     const change = () => { syncMotion(); if (reduced.matches) { titleObserver?.disconnect(); title.classList.remove('title-waiting', 'title-playing'); finish(); leave(); friends.forEach(friend => friend.classList.remove('reacting')); } };
     addEventListener('scroll', scroll, { passive: true });
     hero.addEventListener('pointermove', move); hero.addEventListener('pointerleave', leave); reduced.addEventListener('change', change);
-    return () => { heroObserver.disconnect(); document.removeEventListener('visibilitychange', motionVisibility); titleObserver?.disconnect(); timers.forEach(clearTimeout); removeEventListener('scroll', scroll); hero.removeEventListener('pointermove', move); hero.removeEventListener('pointerleave', leave); reduced.removeEventListener('change', change); };
+    return () => { disposed = true; heroObserver.disconnect(); document.removeEventListener('visibilitychange', motionVisibility); titleObserver?.disconnect(); timers.forEach(clearTimeout); removeEventListener('scroll', scroll); hero.removeEventListener('pointermove', move); hero.removeEventListener('pointerleave', leave); reduced.removeEventListener('change', change); };
 }

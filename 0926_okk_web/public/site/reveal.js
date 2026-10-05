@@ -51,6 +51,8 @@ export function setupReveals() {
             if (seen.has(element)) return;
             seen.add(element);
             if (reduced.matches) return;
+            const bounds = element.getBoundingClientRect();
+            if (bounds.top < innerHeight && bounds.bottom > 0) return;
             element.classList.add('reveal-pending');
             pending.add(element);
             observer.observe(element);

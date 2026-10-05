@@ -49,7 +49,7 @@ export function createWorksFeed() {
                 rendered = state.items.length;
             } else if (mode === 'grid' && state.items.length > rendered) {
                 if (!rendered) grid.replaceChildren();
-                grid.insertAdjacentHTML('beforeend', state.items.slice(rendered).map(project => card(project, 2)).join(''));
+                grid.insertAdjacentHTML('beforeend', state.items.slice(rendered).map((project, index) => card(project, 2, rendered + index < 2)).join(''));
                 rendered = state.items.length;
             }
             if (!state.items.length && state.nextOffset === null) grid.innerHTML = '<p>새로운 작업을 준비하고 있습니다.</p>';
@@ -76,5 +76,5 @@ export function createWorksFeed() {
         };
     }
 
-    return { mount };
+    return { mount, findProject: path => state.items.find(project => path === `/works/${project.slug}`) };
 }

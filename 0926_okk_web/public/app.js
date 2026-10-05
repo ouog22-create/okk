@@ -43,11 +43,12 @@ function render() {
         main.innerHTML = aboutPage();
         document.title = 'Studio — STUDIO OKK';
     } else {
-        const page = projectPage(path, projects.state);
+        const cachedProject = worksFeed.findProject(path);
+        const page = projectPage(path, cachedProject ? { items: [cachedProject], loading: false, error: false } : projects.state);
         main.innerHTML = page.markup;
         document.title = page.title;
     }
-    if (path === '/' || path.startsWith('/works/')) loadProjects();
+    if (path === '/' || (path.startsWith('/works/') && !worksFeed.findProject(path))) loadProjects();
 }
 
 setupContact(document.querySelector('#contact'));
@@ -62,6 +63,25 @@ document.addEventListener('click', event => {
 document.querySelector('#year').textContent = new Date().getFullYear();
 render();
 setupReveals();
+
+// Warm only the cover of the project the visitor is about to open.
+const warmedCovers = new Set();
+function warmProjectCover(event) {
+    if (navigator.connection?.saveData || /(^|-)2g$/.test(navigator.connection?.effectiveType || '')) return;
+    const link = event.target.closest('.work-card, .work-row');
+    if (!link) return;
+    const path = normalizeSitePath(new URL(link.href).pathname);
+    const project = worksFeed.findProject(path) || projects.state.items.find(item => path === `/works/${item.slug}`);
+    const src = project?.cover || project?.thumbnail;
+    if (!/^\/media\/[a-f0-9]{32}\.webp$/.test(src || '') || warmedCovers.has(src)) return;
+    warmedCovers.add(src);
+    const cover = new Image();
+    cover.fetchPriority = 'low';
+    cover.onerror = () => warmedCovers.delete(src);
+    cover.src = src;
+}
+document.addEventListener('pointerover', warmProjectCover);
+document.addEventListener('focusin', warmProjectCover);
 
 function decorateNavigation() {
     document.querySelectorAll('#site-header nav a, #site-header nav button[data-contact]').forEach(item => {
