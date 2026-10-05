@@ -1,6 +1,7 @@
 import { card } from '../project-view.js';
 import { esc } from '../shared/html.js';
 import { projectPath } from '../shared/paths.js';
+import { workLoadingMarkup } from './loading.js';
 
 let displayMode = 'grid';
 
@@ -27,7 +28,7 @@ export function projectList(items) {
 }
 
 export function projectCards(state, featured = false) {
-    if (state.loading) return '<p role="status">작업을 불러오는 중입니다.</p>';
+    if (state.loading) return `<p role="status">${workLoadingMarkup()}</p>`;
     if (state.error) return '<p role="status">작업을 불러오지 못했습니다. 잠시 후 새로고침해주세요.</p>';
     const items = state.items.filter(project => !featured || project.featured);
     return (displayMode === 'list' ? projectList(items) : items.map(project => card(project, featured ? 3 : 2)).join(''))

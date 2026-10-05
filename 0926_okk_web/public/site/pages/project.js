@@ -1,9 +1,10 @@
 import { detail } from '../../project-view.js';
 import { sitePath } from '../../shared/paths.js';
+import { workLoadingMarkup } from '../loading.js';
 
 export function projectPage(path, projects) {
     if (path.startsWith('/works/') && (projects.loading || projects.error)) {
-        const message = projects.loading ? '작업을 불러오는 중입니다.' : '작업을 불러오지 못했습니다. 잠시 후 새로고침해주세요.';
+        const message = projects.loading ? workLoadingMarkup() : '작업을 불러오지 못했습니다. 잠시 후 새로고침해주세요.';
         return { title: 'Work — STUDIO OKK', markup: `<section class="page-section"><h1>Work</h1><p role="status">${message}</p></section>` };
     }
     const project = projects.items.find(item => path === `/works/${item.slug}`);

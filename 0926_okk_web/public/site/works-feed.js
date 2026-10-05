@@ -1,6 +1,7 @@
 import { apiPath } from '../shared/paths.js';
 import { card } from '../project-view.js';
 import { getProjectDisplayMode, projectList } from './projects.js';
+import { workLoadingMarkup } from './loading.js';
 
 export function createWorksFeed() {
     const state = { items: [], nextOffset: 0, loading: false, error: false };
@@ -53,7 +54,7 @@ export function createWorksFeed() {
             }
             if (!state.items.length && state.nextOffset === null) grid.innerHTML = '<p>새로운 작업을 준비하고 있습니다.</p>';
             grid.setAttribute('aria-busy', String(state.loading));
-            status.textContent = state.loading ? '작업을 불러오는 중입니다.'
+            status.innerHTML = state.loading ? workLoadingMarkup()
                 : state.error ? '작업을 불러오지 못했습니다. 다시 시도해주세요.'
                 : state.nextOffset === null && state.items.length ? '모든 작업을 불러왔습니다.' : '';
             button.hidden = state.loading || state.nextOffset === null;

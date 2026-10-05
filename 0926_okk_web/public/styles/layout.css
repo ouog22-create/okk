@@ -74,6 +74,20 @@ nav :is(a, button):focus-visible .nav-letter {
     82% { opacity: 1; }
 }
 
+.loading-flicker { display: inline-flex; color: var(--blue); font-weight: 600; white-space: nowrap; }
+.loading-flicker .nav-letter {
+    animation: nav-flicker .9s steps(1, end) infinite;
+    animation-delay: calc(var(--letter-index) * 75ms);
+}
+.loading-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+}
+
 nav a[aria-current] {
     color: var(--blue);
 }
