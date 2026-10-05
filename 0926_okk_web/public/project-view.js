@@ -1,5 +1,5 @@
 import { esc } from './shared/html.js';
-import { projectPath, sitePath } from './shared/paths.js';
+import { assetPath as asset, projectPath, sitePath } from './shared/paths.js';
 
 const colors = ['lavender', 'lime', 'pink', 'sky'];
 
@@ -31,13 +31,13 @@ export function detail(project) {
         '</figure>',
     ].join('')).join('');
     return [
-        `<article class="page-section detail"><a class="back-link" href="${sitePath('works')}">← 모든 작업</a>`,
+        `<article class="page-section detail"><a class="back-link" href="${sitePath('works')}"><img src="${asset('arrow_L.svg')}" alt="" width="20" height="20"> 모든 작업</a>`,
         '<div class="page-intro"><span class="eyebrow">STUDIO OKK / WORK</span>',
         `<h1>${esc(project.title)}<span class="blue">.</span></h1><p>${esc(project.summary)}</p></div>`,
         image(project.cover || project.thumbnail, project.title, project.color),
         '<div class="project-info"><h2>About the project</h2><div>',
         `<p class="project-copy">${esc(project.description)}</p><dl>${metadata}</dl></div></div>`,
         gallery,
-        `<a class="pill" href="${sitePath('works')}">목록으로 돌아가기 ↗</a></article>`,
+        `<a class="pill" href="${sitePath('works')}"><img src="${asset('arrow_L.svg')}" alt="" width="20" height="20"> 목록으로 돌아가기</a></article>`,
     ].join('');
 }

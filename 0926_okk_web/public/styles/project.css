@@ -178,6 +178,9 @@
 
 .back-link {
     font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .detail>.image-placeholder {
@@ -203,6 +206,16 @@
 
 .detail>.pill {
     margin-top: 40px;
+}
+
+.detail>.pill img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
+.detail>.pill:hover img {
+    filter: brightness(0) invert(1);
 }
 
 .work-card > .project-image {

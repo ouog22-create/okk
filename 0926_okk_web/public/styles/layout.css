@@ -57,6 +57,7 @@ nav a {
     padding: 12px 0;
     display: inline-flex;
     align-items: center;
+    gap: 4px;
     min-height: 44px;
 }
 
@@ -247,8 +248,20 @@ footer .footer-logo span {
 footer>a:last-child {
     border: 1px solid var(--line);
     border-radius: 50%;
-    padding: 10px 14px;
     font-size: 20px;
+}
+
+footer > .footer-top-arrow {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+}
+
+footer > .footer-top-arrow img {
+    display: block;
+    width: 20px;
+    height: 20px;
 }
 
 #site-header {
@@ -408,7 +421,6 @@ footer>a:last-child {
     }
 
     footer>a:last-child {
-        padding: 7px 11px;
         font-size: 15px;
     }
 }

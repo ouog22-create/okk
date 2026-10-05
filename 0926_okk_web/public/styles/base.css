@@ -72,7 +72,7 @@ textarea:focus {
 
 .pill {
     display: inline-flex;
-    gap: 40px;
+    gap: 4px;
     align-items: center;
     border: 1px solid var(--ink);
     border-radius: 30px;
@@ -134,7 +134,7 @@ textarea:focus {
     .pill {
         padding: 12px 14px;
         font-size: 10px;
-        gap: 14px;
+        gap: 4px;
     }
 
     .page-section {

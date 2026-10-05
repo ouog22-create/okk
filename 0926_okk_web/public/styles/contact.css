@@ -51,12 +51,42 @@ dialog {
     width: min(600px, calc(100% - 30px));
     max-height: 90dvh;
     background: var(--paper);
-    box-shadow: 10px 10px 0 #0003;
+    opacity: 0;
+    transition: opacity .24s ease, display .24s allow-discrete, overlay .24s allow-discrete;
+}
+
+dialog[open] {
+    opacity: 1;
+}
+
+@starting-style {
+    dialog[open] {
+        opacity: 0;
+    }
 }
 
 dialog::backdrop {
     background: #141d3d66;
     backdrop-filter: blur(5px);
+    opacity: 0;
+    transition: opacity .24s ease, display .24s allow-discrete, overlay .24s allow-discrete;
+}
+
+dialog[open]::backdrop {
+    opacity: 1;
+}
+
+@starting-style {
+    dialog[open]::backdrop {
+        opacity: 0;
+    }
+}
+
+@media(prefers-reduced-motion:reduce) {
+    dialog,
+    dialog::backdrop {
+        transition-duration: .01ms;
+    }
 }
 
 .window-bar {
