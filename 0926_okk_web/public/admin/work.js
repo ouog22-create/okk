@@ -3,7 +3,7 @@ import { $, notice, focusOn, run, isBusy } from './ui.js';
 import { api } from './api.js';
 import { moveRow } from './order.js';
 
-export function createWorkEditor() {
+export function createWorkEditor({ onOpen = () => {}, onClose = () => {} } = {}) {
     const form = $('#project-form');
     let projects = [], current = null;
     let dirty = false, uploads = 0, mode = 'detail';
@@ -88,6 +88,7 @@ export function createWorkEditor() {
         preview();
         window.scrollTo(0, 0);
         focusOn($('#editor-title'));
+        onOpen();
     }
 
     function renderImages() {
@@ -148,7 +149,7 @@ export function createWorkEditor() {
         });
     };
     $('#new').onclick = () => { notice(); showEditor(); };
-    $('#back').onclick = () => run(async () => {
+    async function close() {
         if (dirty && !confirm('저장하지 않은 변경사항을 버리고 목록으로 이동할까요?')) return;
         await refresh();
         reset();
@@ -156,7 +157,9 @@ export function createWorkEditor() {
         $('#workspace').hidden = false;
         notice();
         focusOn($(`[data-id="${editorOpener}"] [data-action="edit"]`) || $('#list-title'));
-    });
+        onClose();
+    }
+    $('#back').onclick = () => run(close);
     $('#refresh').onclick = () => run(refresh);
     $('#search').oninput = renderList;
     $('#filter').onchange = renderList;
@@ -252,6 +255,7 @@ export function createWorkEditor() {
         clearTimeout(previewTimer);
     }
     return {
+        close,
         refresh,
         reset,
         preview,

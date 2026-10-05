@@ -1,9 +1,18 @@
-import { $, notice, focusOn, run } from './ui.js';
+import { $, notice, focusOn, run, isBusy } from './ui.js';
 import { createWorkEditor } from './work.js';
 import { createClientsEditor } from './clients.js';
 import { setupAuth } from './auth.js';
+import { createEditorHistory } from './history.js';
 
-const editors = { work: createWorkEditor(), clients: createClientsEditor() };
+const navigation = createEditorHistory({
+    close: () => section === 'work' ? editors.work.close() : switchSection('clients'),
+    run,
+    isBusy,
+});
+const editors = {
+    work: createWorkEditor({ onOpen: () => navigation.opened(), onClose: () => navigation.closed() }),
+    clients: createClientsEditor({ onOpen: () => navigation.opened() }),
+};
 let section = 'work';
 const hasChanges = () => Object.values(editors).some(editor => editor.hasChanges());
 
@@ -22,6 +31,7 @@ async function switchSection(next) {
     }
     notice();
     focusOn(editors[section].focusTarget());
+    navigation.closed();
 }
 
 for (const name of Object.keys(editors)) {

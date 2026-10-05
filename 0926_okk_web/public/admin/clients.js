@@ -3,7 +3,7 @@ import { $, notice, focusOn, run, isBusy } from './ui.js';
 import { api } from './api.js';
 import { moveRow } from './order.js';
 
-export function createClientsEditor() {
+export function createClientsEditor({ onOpen = () => {} } = {}) {
     let dirty = false, uploads = 0;
     let clients = [], clientCurrent = null, clientLogo = '';
     const clientForm = $('#client-form');
@@ -29,6 +29,7 @@ export function createClientsEditor() {
         $('#clients-workspace').hidden = true; $('#client-editor').hidden = false;
         $('#client-editor-title').textContent = item ? '클라이언트 편집' : '클라이언트 등록';
         focusOn($('#client-editor-title')); window.scrollTo(0, 0);
+        onOpen();
     }
     $('#client-new').onclick = () => editClient();
     $('#client-refresh').onclick = () => run(refreshClients);
