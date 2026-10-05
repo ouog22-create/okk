@@ -122,7 +122,7 @@ def create_app(data_dir=None):
         response.headers['X-Content-Type-Options'] = 'nosniff'
         response.headers['Referrer-Policy'] = 'same-origin'
         response.headers['X-Frame-Options'] = 'SAMEORIGIN'
-        if request.path.startswith(('/api/', '/media/', '/admin')):
+        if request.path.startswith(('/api/', '/admin')):
             response.headers['Cache-Control'] = 'no-store'
         if production:
             response.headers['Strict-Transport-Security'] = 'max-age=31536000'
@@ -350,6 +350,8 @@ def create_app(data_dir=None):
         # to reuse published images briefly across page navigations.
         if is_public:
             response.headers['Cache-Control'] = 'private, max-age=300'
+        else:
+            response.headers['Cache-Control'] = 'no-store'
         return response
 
     @app.post('/api/contact')
