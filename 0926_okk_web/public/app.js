@@ -10,6 +10,7 @@ import { clientLogos } from './site/clients.js';
 import { setupHero } from './site/hero.js';
 import { setupContact } from './site/contact.js';
 import { setupNavigation, updateNavigation } from './site/navigation.js';
+import { setupReveals } from './site/reveal.js';
 
 const redirectedPath = new URLSearchParams(location.search).get('path');
 if (redirectedPath) history.replaceState({}, '', sitePath(redirectedPath));
@@ -60,6 +61,7 @@ document.addEventListener('click', event => {
 });
 document.querySelector('#year').textContent = new Date().getFullYear();
 render();
+setupReveals();
 
 function decorateNavigation() {
     document.querySelectorAll('#site-header nav a, #site-header nav button[data-contact]').forEach(item => {

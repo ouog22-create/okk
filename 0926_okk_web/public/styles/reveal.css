@@ -1,0 +1,11 @@
+@media (prefers-reduced-motion: no-preference) {
+    .reveal-pending {
+        opacity: 0;
+    }
+}
+
+@media print {
+    .reveal-pending {
+        opacity: 1;
+    }
+}
