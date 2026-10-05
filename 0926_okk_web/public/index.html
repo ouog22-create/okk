@@ -13,11 +13,18 @@
     <link rel="stylesheet" href="/styles/hero.css">
     <link rel="stylesheet" href="/styles/studio.css">
     <link rel="stylesheet" href="/styles/contact.css">
+    <link rel="stylesheet" href="/styles/intro-loader.css">
 
+    <script src="/site/intro-loader.js" defer></script>
     <script type="module" src="/app.js"></script>
 </head>
 
 <body>
+    <div class="intro-loader" id="intro-loader" role="status" aria-label="페이지를 불러오는 중" aria-live="polite">
+        <span class="intro-loader__brand">studio <b>okk<span aria-hidden="true">✳</span></b></span>
+        <div class="intro-loader__progress" aria-hidden="true"><span></span></div>
+        <span class="intro-loader__value" aria-hidden="true">00</span>
+    </div>
     <a class="skip" href="#main">본문으로 이동</a>
     <header id="site-header"><a class="brand" href="/" aria-label="STUDIO OKK 홈">studio <b>okk<span class="brand-star" aria-hidden="true"><img src="/assets/star.svg" alt="" width="31" height="31"></span></b></a>
         <nav aria-label="주 메뉴"><a href="/about">Studio</a><a href="/works">Works <span

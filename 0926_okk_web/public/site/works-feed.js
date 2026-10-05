@@ -1,5 +1,6 @@
 import { apiPath } from '../shared/paths.js';
 import { card } from '../project-view.js';
+import { getProjectDisplayMode, projectList } from './projects.js';
 
 export function createWorksFeed() {
     const state = { items: [], nextOffset: 0, loading: false, error: false };
@@ -30,12 +31,22 @@ export function createWorksFeed() {
         const button = root.querySelector('#works-more');
         const sentinel = root.querySelector('#works-sentinel');
         let rendered = 0;
+        let renderedMode = getProjectDisplayMode();
         const observer = 'IntersectionObserver' in window ? new IntersectionObserver(entries => {
             if (entries.some(entry => entry.isIntersecting)) loadNext();
         }, { rootMargin: '0px 0px 200px 0px' }) : null;
 
         function update() {
-            if (state.items.length > rendered) {
+            const mode = getProjectDisplayMode();
+            if (mode !== renderedMode) {
+                grid.replaceChildren();
+                rendered = 0;
+                renderedMode = mode;
+            }
+            if (mode === 'list' && state.items.length !== rendered) {
+                grid.innerHTML = projectList(state.items);
+                rendered = state.items.length;
+            } else if (mode === 'grid' && state.items.length > rendered) {
                 if (!rendered) grid.replaceChildren();
                 grid.insertAdjacentHTML('beforeend', state.items.slice(rendered).map(project => card(project, 2)).join(''));
                 rendered = state.items.length;
@@ -52,6 +63,7 @@ export function createWorksFeed() {
         }
 
         button.addEventListener('click', loadNext);
+        window.addEventListener('okk:work-view-change', update);
         listeners.add(update);
         update();
         if (!state.items.length && !state.error) loadNext();
@@ -59,6 +71,7 @@ export function createWorksFeed() {
             observer?.disconnect();
             listeners.delete(update);
             button.removeEventListener('click', loadNext);
+            window.removeEventListener('okk:work-view-change', update);
         };
     }
 

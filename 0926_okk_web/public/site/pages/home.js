@@ -1,5 +1,5 @@
 import { assetPath as asset } from '../../shared/paths.js';
-import { projectCards } from '../projects.js';
+import { projectCards, projectViewControl } from '../projects.js';
 import { clientLogos } from '../clients.js';
 import { contactSection } from '../contact-section.js';
 
@@ -16,7 +16,7 @@ function heroSection() {
 
 function selectedWorks(projects) {
     return [
-        `<section class="works-section" id="selected" tabindex="-1"><div class="section-heading"><div><span class="eyebrow">01 / SELECTED WORKS</span><h2>Good work.<br><span>Good energy.</span><i aria-hidden="true"><img class="star-icon" src="${asset('star.svg')}" alt="" width="111" height="111"></i></h2></div></div>`,
+        `<section class="works-section" id="selected" tabindex="-1"><div class="section-heading"><div><span class="eyebrow">01 / SELECTED WORKS</span><h2>Good work.<br><span>Good energy.</span><i aria-hidden="true"><img class="star-icon" src="${asset('star.svg')}" alt="" width="111" height="111"></i></h2></div>${projectViewControl()}</div>`,
         `<div class="work-grid">${projectCards(projects, true)}</div></section>`,
     ].join('');
 }
