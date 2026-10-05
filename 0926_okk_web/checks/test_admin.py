@@ -48,6 +48,35 @@ class AdminTests(unittest.TestCase):
     def public(self):
         return self.visitor.get('/api/projects').json['projects']
 
+    def test_portfolio_slug_generation_and_collision_retry(self):
+        first = self.new_project()
+        self.assertRegex(first['draft']['slug'], r'^portfolio-[0-9]{9}$')
+        used = int(first['draft']['slug'].split('-')[1]) - 100_000_000
+        other = (used + 1) % 900_000_000
+        with patch('cms.secrets.randbelow', side_effect=[used, other]):
+            response = self.post('projects', dict(title='한글 제목', color='sky'))
+        self.assertEqual(response.status_code, 201)
+        second = response.json['project']
+        self.assertEqual(second['draft']['slug'], f'portfolio-{100_000_000 + other}')
+        second['draft']['title'] = '이름 변경'
+        saved = self.action(second, 'save', project=second['draft'], publish=True)
+        self.assertEqual(saved['draft']['slug'], second['draft']['slug'])
+        existing_style = self.post('projects', dict(slug='portfolio-166670979', title='기존 규칙', color='sky'))
+        self.assertEqual(existing_style.status_code, 201)
+        self.assertEqual(existing_style.json['project']['draft']['slug'], 'portfolio-166670979')
+
+    def test_previous_urls_survive_save_and_cannot_be_overwritten(self):
+        p = self.new_project()
+        p['draft']['previous_slugs'] = ['old-project']
+        with self.app.app_context():
+            import json
+            self.app.db().execute('UPDATE projects SET draft=? WHERE id=?', (json.dumps(p['draft']), p['id']))
+            self.app.db().commit()
+        p['draft']['previous_slugs'] = ['forged-url']
+        saved = self.action(p, 'save', project=p['draft'], publish=True)
+        self.assertEqual(saved['draft']['previous_slugs'], ['old-project'])
+        self.assertEqual(self.public()[0]['previous_slugs'], ['old-project'])
+
     def test_new_projects_prepend_without_reordering_existing_projects(self):
         before = [p['id'] for p in self.client.get('/api/admin/projects').json['projects']]
         first = self.new_project()
@@ -57,7 +86,7 @@ class AdminTests(unittest.TestCase):
         after = [p['id'] for p in self.client.get('/api/admin/projects').json['projects']]
         self.assertEqual(after, [second['id'], first['id'], *before])
         self.action(first, 'publish')
-        self.assertEqual([p['slug'] for p in self.public()][:2], ['newest-work', 'test-work'])
+        self.assertEqual([p['slug'] for p in self.public()][:2], [second['draft']['slug'], first['draft']['slug']])
 
     def test_draft_publish_edit_unpublish_restore_persistence(self):
         p = self.new_project()

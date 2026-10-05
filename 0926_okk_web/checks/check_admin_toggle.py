@@ -34,7 +34,7 @@ with sync_playwright() as p:
     with page.expect_response(lambda response: response.url.endswith('/api/admin/projects') and response.request.method == 'POST') as saved:
         page.locator('#save').click()
     slug = saved.value.json()['project']['draft']['slug']
-    assert slug.startswith('project-')
+    assert slug.startswith('portfolio-') and len(slug.removeprefix('portfolio-')) == 9
     page.get_by_text('저장했습니다. 현재 비공개 상태입니다.',exact=True).wait_for()
     assert page.locator('#notice').evaluate('(e)=>getComputedStyle(e).position')=='fixed'
     toast_box=page.locator('#notice').bounding_box()

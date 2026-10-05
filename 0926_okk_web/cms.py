@@ -239,6 +239,14 @@ def create_app(data_dir=None):
     @app.post('/api/admin/projects')
     def create_project():
         values = body()
+        # Allocate on the server, including requests from an older open editor.
+        db().execute('BEGIN IMMEDIATE')
+        if not isinstance(values.get('slug'), str) or not re.fullmatch(r'portfolio-[0-9]+', values['slug']):
+            while True:
+                slug = f'portfolio-{100_000_000 + secrets.randbelow(900_000_000)}'
+                if not db().execute('SELECT 1 FROM projects WHERE slug=?', (slug,)).fetchone():
+                    values['slug'] = slug
+                    break
         p = validate(values)
         publish = values.get('publish', False)
         if not isinstance(publish, bool):
@@ -271,6 +279,10 @@ def create_app(data_dir=None):
             # 기존 링크를 유지하기 위해 식별자는 고정한다.
             if p['slug'] != row['slug']:
                 abort(400, '생성 후 URL 식별자는 변경할 수 없습니다.')
+            # URL aliases are maintained by migrations, never by form input.
+            aliases = json.loads(row['draft']).get('previous_slugs')
+            if aliases:
+                p['previous_slugs'] = aliases
             draft = json.dumps(p, ensure_ascii=False)
             if 'publish' in values:
                 if not isinstance(values['publish'], bool) or (values['publish'] and trashed):

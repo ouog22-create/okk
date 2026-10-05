@@ -47,6 +47,9 @@ function render() {
         const page = projectPage(path, cachedProject ? { items: [cachedProject], loading: false, error: false } : projects.state);
         main.innerHTML = page.markup;
         document.title = page.title;
+        if (page.canonical && location.pathname !== page.canonical) {
+            history.replaceState(history.state, '', page.canonical + location.search + location.hash);
+        }
     }
     if (path === '/' || (path.startsWith('/works/') && !worksFeed.findProject(path))) loadProjects();
 }

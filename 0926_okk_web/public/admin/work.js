@@ -50,7 +50,7 @@ export function createWorkEditor() {
     }
 
     function blank() {
-        return { title: '', slug: `project-${crypto.randomUUID()}`, subtitle: 'STUDIO OKK / WORK', summary: '', client: '', year: '', scope: '', description: '', color: 'lavender', featured: true, thumbnail: '', cover: '', gallery: [] };
+        return { title: '', slug: '', subtitle: 'STUDIO OKK / WORK', summary: '', client: '', year: '', scope: '', description: '', color: 'lavender', featured: true, thumbnail: '', cover: '', gallery: [] };
     }
 
     function values() {
