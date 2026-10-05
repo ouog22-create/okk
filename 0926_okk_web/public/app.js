@@ -57,8 +57,6 @@ document.addEventListener('click', event => {
     if (!control) return;
     toggleProjectDisplayMode();
     control.outerHTML = projectViewControl();
-    const grid = main.querySelector('.work-grid');
-    if (grid && normalizeSitePath(location.pathname) === '/') grid.innerHTML = projectCards(projects.state, true);
 });
 document.querySelector('#year').textContent = new Date().getFullYear();
 render();
