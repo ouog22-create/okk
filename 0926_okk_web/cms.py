@@ -1,4 +1,5 @@
 """Persistent project store and authenticated administration API."""
+import io
 import hashlib
 import json
 import os
@@ -8,34 +9,45 @@ import sqlite3
 import time
 import warnings
 from pathlib import Path
-from flask import Flask, abort, g, jsonify, request, send_from_directory
+from flask import Flask, abort, g, jsonify, request, send_from_directory, send_file
 from werkzeug.exceptions import HTTPException
 from werkzeug.security import check_password_hash, generate_password_hash
 from PIL import Image, ImageOps
 from clients_service import initialize_clients, register_client_routes
+from database import connect
 
 ROOT = Path(__file__).resolve().parent
 Image.MAX_IMAGE_PIXELS = 24_000_000
 
 def create_app(data_dir=None):
     app = Flask(__name__, static_folder=None)
-    data = Path(data_dir or os.getenv('OKK_DATA_DIR', ROOT / 'data')).resolve()
+    database_url = os.getenv('DATABASE_URL') if data_dir is None else None
+    if os.getenv('VERCEL') and not database_url:
+        raise RuntimeError('Vercel requires a Supabase DATABASE_URL')
+    data = Path(data_dir or ('/tmp/okk' if os.getenv('VERCEL') else os.getenv('OKK_DATA_DIR', ROOT / 'data'))).resolve()
     data.mkdir(parents=True, exist_ok=True)
     (data / 'uploads').mkdir(exist_ok=True)
     app.config.update(MAX_CONTENT_LENGTH=12 * 1024 * 1024, DATA_DIR=data)
-    production = os.getenv('OKK_ENV') == 'production'
+    production = os.getenv('OKK_ENV') == 'production' or bool(os.getenv('VERCEL'))
+    storage = None
+    if database_url:
+        from media_storage import SupabaseMedia
+        storage = SupabaseMedia()
     origin = os.getenv('OKK_ORIGIN', '').rstrip('/')
-    if production and not origin.startswith('https://'):
+    from urllib.parse import urlsplit
+    origins = {value for value in [origin] if value}
+    for key in ('VERCEL_URL', 'VERCEL_PROJECT_PRODUCTION_URL'):
+        if os.getenv(key):
+            origins.add('https://' + os.environ[key].rstrip('/'))
+    origins.update(value.strip().rstrip('/') for value in os.getenv('OKK_ALLOWED_ORIGINS', '').split(',') if value.strip())
+    if production and (not origins or any(not value.startswith('https://') for value in origins)):
         raise RuntimeError('운영 환경에는 HTTPS OKK_ORIGIN 설정이 필요합니다.')
-    if origin:
-        from urllib.parse import urlsplit
-        app.config['TRUSTED_HOSTS'] = [urlsplit(origin).hostname]
+    if origins:
+        app.config['TRUSTED_HOSTS'] = sorted({urlsplit(value).hostname for value in origins})
 
     def db():
         if 'db' not in g:
-            g.db = sqlite3.connect(data / 'okk.sqlite3', timeout=15)
-            g.db.row_factory = sqlite3.Row
-            g.db.execute('PRAGMA foreign_keys=ON')
+            g.db = connect(data, database_url)
         return g.db
 
     @app.teardown_appcontext
@@ -95,8 +107,8 @@ def create_app(data_dir=None):
     @app.before_request
     def protect():
         if request.method not in ('GET', 'HEAD', 'OPTIONS'):
-            expected = origin or request.host_url.rstrip('/')
-            if request.headers.get('Origin') != expected:
+            expected = origins or {request.host_url.rstrip('/')}
+            if request.headers.get('Origin') not in expected:
                 abort(403, '허용되지 않은 요청입니다.')
         if request.path.startswith('/api/admin/') and request.path != '/api/admin/login':
             g.auth = session()
@@ -308,7 +320,12 @@ def create_app(data_dir=None):
                 image = ImageOps.exif_transpose(image).convert('RGBA' if has_alpha else 'RGB')
                 image.thumbnail((3200, 3200))
                 name = secrets.token_hex(16) + '.webp'
-                image.save(data / 'uploads' / name, 'WEBP', quality=88)
+                if storage:
+                    content = io.BytesIO()
+                    image.save(content, 'WEBP', quality=88)
+                    storage.save(name, content.getvalue())
+                else:
+                    image.save(data / 'uploads' / name, 'WEBP', quality=88)
         except (ValueError, OSError, Image.DecompressionBombError, Image.DecompressionBombWarning):
             abort(400, 'JPG·PNG·WebP 이미지(최대 12MB, 2,400만 화소)를 선택해주세요.')
         db().execute('INSERT INTO media VALUES(?,?)', (name, (upload.filename or '')[:250]))
@@ -321,6 +338,11 @@ def create_app(data_dir=None):
             abort(404)
         if not session() and not db().execute('SELECT 1 FROM published_media WHERE media_id=? LIMIT 1', (name,)).fetchone() and not db().execute('SELECT 1 FROM clients WHERE logo=? AND visible=1 AND trashed=0 LIMIT 1', ('/media/' + name,)).fetchone():
             abort(404)
+        if storage:
+            try:
+                return send_file(io.BytesIO(storage.load(name)), mimetype='image/webp')
+            except FileNotFoundError:
+                abort(404)
         return send_from_directory(data / 'uploads', name)
 
     @app.post('/api/contact')
