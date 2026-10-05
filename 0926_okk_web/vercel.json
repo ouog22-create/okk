@@ -2,7 +2,13 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "flask",
   "rewrites": [
-    { "source": "/okk/assets/:path*", "destination": "/assets/:path*" }
+    { "source": "/okk/assets/:path*", "destination": "/assets/:path*" },
+    { "source": "/about", "destination": "/index.html" },
+    { "source": "/works", "destination": "/index.html" },
+    { "source": "/works/:slug", "destination": "/index.html" },
+    { "source": "/okk/about", "destination": "/index.html" },
+    { "source": "/okk/works", "destination": "/index.html" },
+    { "source": "/okk/works/:slug", "destination": "/index.html" }
   ],
   "headers": [
     {

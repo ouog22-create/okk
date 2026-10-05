@@ -15,7 +15,11 @@ export function toggleProjectDisplayMode() {
 
 export function projectViewControl() {
     const isList = displayMode === 'list';
-    return `<button class="work-view-toggle" type="button" data-work-view-toggle aria-label="${isList ? '그리드 보기' : '목록 보기'}" aria-pressed="${isList}"><span>${isList ? 'GRID' : 'LIST'}</span><span aria-hidden="true">${isList ? '▦' : '☷'}</span></button>`;
+    const label = isList ? '그리드 보기' : '목록 보기';
+    const icon = isList
+        ? '<svg viewBox="0 0 20 20" focusable="false"><rect x="2.5" y="2.5" width="6" height="6"/><rect x="11.5" y="2.5" width="6" height="6"/><rect x="2.5" y="11.5" width="6" height="6"/><rect x="11.5" y="11.5" width="6" height="6"/></svg>'
+        : '<svg viewBox="0 0 20 20" focusable="false"><path d="M3 5h14M3 10h14M3 15h14"/></svg>';
+    return `<button class="work-view-toggle" type="button" data-work-view-toggle aria-label="${label}로 전환">${label}${icon}</button>`;
 }
 
 export function projectList(items) {

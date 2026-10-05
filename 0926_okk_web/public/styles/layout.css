@@ -55,6 +55,9 @@ nav {
 
 nav a {
     padding: 12px 0;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
 }
 
 .nav-label { display: inline-flex; }
@@ -106,11 +109,7 @@ nav button {
     color: white;
     border-radius: 30px;
     padding: 15px 23px;
-}
-
-nav button > span:not(.nav-label) {
-    margin-left: 25px;
-    font-size: 19px;
+    min-height: 44px;
 }
 
 .works-section {
@@ -137,18 +136,20 @@ nav button > span:not(.nav-label) {
     flex: 0 0 auto;
     display: inline-flex;
     align-items: center;
-    gap: 12px;
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    padding: 11px 15px;
-    font-size: 10px;
-    letter-spacing: .08em;
-    transition: background .2s, color .2s, border-color .2s;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 8px 0;
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: color .2s;
 }
 
 .work-view-toggle:hover,
-.work-view-toggle[aria-pressed="true"] { color: white; background: var(--ink); border-color: var(--ink); }
-.work-view-toggle span:last-child { font-size: 15px; line-height: 1; }
+.work-view-toggle:focus-visible { color: var(--blue); }
+.work-view-toggle svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 .works-intro-bottom { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
 .works-intro-bottom p { margin: 0; }
 .works-feed-heading { display: flex; flex: 0 0 auto; }
@@ -329,18 +330,14 @@ footer>a:last-child {
     }
 
     nav {
-        gap: 18px;
-        font-size: 11px;
+        gap: clamp(10px, 3.5vw, 16px);
+        font-size: 12px;
     }
 
     nav button {
-        padding: 11px 14px;
-        font-size: 11px;
-    }
-
-    nav button span {
-        margin-left: 8px;
-        font-size: 14px;
+        padding: 0 14px;
+        font-size: 12px;
+        white-space: nowrap;
     }
 
     .works-section {
@@ -413,5 +410,34 @@ footer>a:last-child {
     footer>a:last-child {
         padding: 7px 11px;
         font-size: 15px;
+    }
+}
+
+@media(max-width:359px) {
+    header {
+        margin-right: 14px;
+        margin-left: 14px;
+    }
+
+    .brand {
+        font-size: 16px;
+    }
+
+    .brand b {
+        font-size: 27px;
+    }
+
+    .brand-star {
+        font-size: 21px;
+    }
+
+    nav {
+        gap: 9px;
+        font-size: 11px;
+    }
+
+    nav button {
+        padding: 0 10px;
+        font-size: 11px;
     }
 }
