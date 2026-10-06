@@ -392,6 +392,11 @@
         padding: 24px 20px 0;
     }
 
+    .intro-circle {
+        width: 300px;
+        height: 300px;
+    }
+
     .hero-top {
         font-size: 8px;
         letter-spacing: .5px;
@@ -522,7 +527,7 @@
     }
 
     65% {
-        transform: translate(-50%, -50%) scale(1.7);
+        transform: translate(-50%, -50%) scale(1.1);
     }
 
     100% {
