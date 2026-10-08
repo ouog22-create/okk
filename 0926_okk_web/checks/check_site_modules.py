@@ -77,20 +77,11 @@ with sync_playwright() as p:
     failed.close()
 
     page.locator('nav [data-contact]').click()
-    page.locator('#contact .submit').click()
-    assert page.locator('#contact [name=company]').evaluate('(element) => element === document.activeElement')
-    fields = {'company': '테스트 회사', 'name': '테스트 담당자', 'phone': '01012345678',
-              'email': 'test@example.com', 'message': '입력 보존 확인'}
-    for name, value in fields.items(): page.locator(f'#contact [name={name}]').fill(value)
-    page.route('**/api/contact', lambda route: route.fulfill(status=503, json={'error': '테스트 발송 실패'}))
-    page.locator('#contact .submit').click()
-    page.get_by_text('테스트 발송 실패', exact=True).wait_for()
-    for name, value in fields.items(): assert page.locator(f'#contact [name={name}]').input_value() == value
-    page.unroute('**/api/contact')
-    page.route('**/api/contact', lambda route: route.fulfill(json={'ok': True}))
-    page.locator('#contact .submit').click()
-    page.get_by_text('문의가 접수되었습니다. 메일로 답변드리겠습니다.', exact=True).wait_for()
-    for name in fields: assert page.locator(f'#contact [name={name}]').input_value() == ''
+    email = page.locator('#contact .contact-email')
+    assert email.get_attribute('href') == 'mailto:okk__everything@naver.com'
+    assert email.inner_text() == 'okk__everything@naver.com'
+    assert email.evaluate('(element) => element === document.activeElement')
+    assert page.locator('#contact input, #contact button, #contact textarea').count() == 0
     page.keyboard.press('Escape')
     assert page.locator('nav [data-contact]').evaluate('(element) => element === document.activeElement')
 
@@ -107,4 +98,4 @@ with sync_playwright() as p:
     assert sheets == ['/okk/styles/base.css', '/okk/styles/project.css', '/admin/preview.css'], sheets
     assert not errors, errors
     browser.close()
-    print('PASS: URL aliases, redirects, history, hero cleanup, async/error data, contact preservation, shared preview and escaping')
+    print('PASS: URL aliases, redirects, history, hero cleanup, async/error data, contact mailto, shared preview and escaping')

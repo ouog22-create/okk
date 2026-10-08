@@ -99,7 +99,7 @@ export function createWorkEditor({ onOpen = () => {}, onClose = () => {} } = {})
                 : '권장 1,920 × 1,080px (16:9) · 원본 비율 유지';
             return `<div class="image-block"><h3>${label}</h3><p id="${key}-help" class="hint">${guide}</p>
                 ${current.draft[key] ? `<img src="${esc(current.draft[key])}" alt="${label}" decoding="async"><button type="button" data-remove="${key}" aria-label="${label} 제거">이미지 제거</button>` : ''}
-                <label class="upload">${label} ${current.draft[key] ? '교체' : '선택'}<input type="file" data-upload="${key}" aria-describedby="upload-help ${key}-help" accept="image/jpeg,image/png,image/webp"></label></div>`;
+                <label class="upload">${label} ${current.draft[key] ? '교체' : '선택'}<input type="file" data-upload="${key}" aria-describedby="upload-help ${key}-help" accept="image/jpeg,image/png,image/webp,image/gif"></label></div>`;
         }).join('');
         $('#gallery-count').textContent = `${current.draft.gallery.length}/40`;
         $('#gallery').innerHTML = current.draft.gallery.map((image, index) => `<div class="image-block" data-index="${index}">

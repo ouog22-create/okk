@@ -198,6 +198,23 @@ class AdminTests(unittest.TestCase):
             with Image.open(io.BytesIO(response.data)) as uploaded:
                 self.assertEqual(uploaded.convert('RGBA').getpixel((0,0))[3],0)
 
+    def test_animated_gif_upload_keeps_frames(self):
+        source = io.BytesIO()
+        first = Image.new('RGB', (20, 20), 'red')
+        second = Image.new('RGB', (20, 20), 'blue')
+        first.save(source, 'GIF', save_all=True, append_images=[second], duration=[100, 200], loop=0)
+        source.seek(0)
+        result = self.client.post('/api/admin/media', data={'file': (source, 'animated.gif')}, headers=self.headers)
+        self.assertEqual(result.status_code, 201)
+        with self.client.get(result.json['url']) as response:
+            with Image.open(io.BytesIO(response.data)) as uploaded:
+                self.assertEqual(uploaded.format, 'WEBP')
+                self.assertEqual(uploaded.n_frames, 2)
+                uploaded.seek(0)
+                self.assertGreater(uploaded.convert('RGB').getpixel((10, 10))[0], 200)
+                uploaded.seek(1)
+                self.assertGreater(uploaded.convert('RGB').getpixel((10, 10))[2], 200)
+
     def test_media_index_migration_and_shared_visibility(self):
         image = io.BytesIO()
         Image.new('RGB', (20,20), 'red').save(image, 'PNG')

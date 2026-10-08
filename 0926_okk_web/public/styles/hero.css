@@ -135,7 +135,7 @@
     font-weight: 900;
     color: var(--blue);
     font-size: clamp(80px, 17.8vw, 290px);
-    letter-spacing: -.085em;
+    letter-spacing: -.05em;
     line-height: .92;
     margin: 20px 0 25px;
     white-space: nowrap;
