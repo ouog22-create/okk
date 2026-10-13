@@ -325,21 +325,34 @@ def create_app(data_dir=None):
             with warnings.catch_warnings():
                 warnings.simplefilter('error', Image.DecompressionBombWarning)
                 image = Image.open(upload.stream)
-                if image.format not in ('JPEG', 'PNG', 'WEBP'):
+                if image.format not in ('JPEG', 'PNG', 'WEBP', 'GIF'):
                     raise ValueError()
                 image.load()
-                has_alpha = 'A' in image.getbands() or 'transparency' in image.info
-                image = ImageOps.exif_transpose(image).convert('RGBA' if has_alpha else 'RGB')
-                image.thumbnail((3200, 3200))
+                if image.format == 'GIF' and getattr(image, 'n_frames', 1) > 1:
+                    loop = image.info.get('loop', 0)
+                    frames, durations = [], []
+                    for index in range(image.n_frames):
+                        image.seek(index)
+                        frame = image.convert('RGBA')
+                        frame.thumbnail((3200, 3200))
+                        frames.append(frame)
+                        durations.append(image.info.get('duration', 100))
+                    image = frames[0]
+                    save_options = dict(save_all=True, append_images=frames[1:], duration=durations, loop=loop)
+                else:
+                    has_alpha = 'A' in image.getbands() or 'transparency' in image.info
+                    image = ImageOps.exif_transpose(image).convert('RGBA' if has_alpha else 'RGB')
+                    image.thumbnail((3200, 3200))
+                    save_options = {}
                 name = secrets.token_hex(16) + '.webp'
                 if storage:
                     content = io.BytesIO()
-                    image.save(content, 'WEBP', quality=88)
+                    image.save(content, 'WEBP', quality=88, **save_options)
                     storage.save(name, content.getvalue())
                 else:
-                    image.save(data / 'uploads' / name, 'WEBP', quality=88)
+                    image.save(data / 'uploads' / name, 'WEBP', quality=88, **save_options)
         except (ValueError, OSError, Image.DecompressionBombError, Image.DecompressionBombWarning):
-            abort(400, 'JPG·PNG·WebP 이미지(최대 12MB, 2,400만 화소)를 선택해주세요.')
+            abort(400, 'JPG·PNG·WebP·GIF 이미지(최대 12MB, 2,400만 화소)를 선택해주세요.')
         db().execute('INSERT INTO media VALUES(?,?)', (name, (upload.filename or '')[:250]))
         db().commit()
         return jsonify(url='/media/' + name), 201

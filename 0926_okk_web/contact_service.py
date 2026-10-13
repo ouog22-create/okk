@@ -17,11 +17,11 @@ def send_contact(data):
         return {'error': '입력 형식을 확인해주세요.'}, 400
     host, sender = os.getenv('SMTP_HOST'), os.getenv('SMTP_FROM')
     if not host or not sender:
-        return {'error': '현재 문의 발송을 준비 중입니다. ouog22@gmail.com으로 직접 연락해주세요. 입력 내용은 유지됩니다.'}, 503
+        return {'error': '현재 문의 발송을 준비 중입니다. okk__everything@naver.com으로 직접 연락해주세요. 입력 내용은 유지됩니다.'}, 503
     try:
         message = EmailMessage()
         message['Subject'] = f"[STUDIO OKK 문의] {data['company']} / {data['name']}"
-        message['From'], message['To'], message['Reply-To'] = sender, 'ouog22@gmail.com', data['email']
+        message['From'], message['To'], message['Reply-To'] = sender, 'okk__everything@naver.com', data['email']
         message.set_content('\n\n'.join(f'{label}: {data[key]}' for key, (label, _) in FIELDS.items()))
         port = int(os.getenv('SMTP_PORT', '465'))
         context = ssl.create_default_context()

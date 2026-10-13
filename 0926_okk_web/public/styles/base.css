@@ -102,7 +102,7 @@ textarea:focus {
 .page-intro h1 {
     font-size: clamp(60px, 9vw, 130px);
     line-height: 1;
-    letter-spacing: -.07em;
+    letter-spacing: -.04em;
     margin: 25px 0;
 }
 

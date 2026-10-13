@@ -30,7 +30,9 @@ A안 작업 데이터는 `/admin/`에서 관리하며 SQLite에 저장합니다.
 
 ## 문의 발송 설정
 
-서버 실행 환경에 `SMTP_HOST`, `SMTP_PORT`(기본 465), `SMTP_FROM`(인증된 발신 주소), `SMTP_USER`, `SMTP_PASSWORD`를 설정합니다. 465는 TLS, 다른 포트는 STARTTLS를 사용합니다. 비밀번호는 public 폴더에 저장하지 않습니다. 수신자는 서버에서 `ouog22@gmail.com`으로 고정되어 있습니다.
+사이트의 Contact 팝업은 `okk__everything@naver.com` 메일 링크를 표시합니다. 클릭하면 방문자의 기본 메일 앱이 열립니다.
+
+기존 `/api/contact`를 사용하는 클라이언트를 위해 서버 메일 전송 기능도 유지합니다. 서버 실행 환경에 `SMTP_HOST`, `SMTP_PORT`(기본 465), `SMTP_FROM`(인증된 발신 주소), `SMTP_USER`, `SMTP_PASSWORD`를 설정합니다. 465는 TLS, 다른 포트는 STARTTLS를 사용합니다. 비밀번호는 public 폴더에 저장하지 않습니다. 수신자는 `okk__everything@naver.com`입니다.
 
 설정 전 접수 시 준비 중 메시지를 표시하며 입력을 보존합니다. 실제 발송 성공을 가짜로 표시하지 않습니다. SMTP 서버가 메시지를 접수해야 성공을 반환합니다. 실제 수신함 도착은 운영 설정 후 확인해야 합니다. 문의 데이터는 별도 저장하지 않습니다. 현재 개인정보 안내는 초안이며 보관 기간 등 운영 정책을 확정한 후 공개합니다.
 
