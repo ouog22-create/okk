@@ -41,7 +41,7 @@ with sync_playwright() as p:
         page.goto(base + '/okk/', wait_until='networkidle')
         page.locator('nav [data-contact]').click()
         capture(f'{width}:contact')
-        page.locator('#contact .close').click()
+        page.locator('#contact .contact-close').click()
 
     page.goto(base + '/admin/', wait_until='networkidle')
     capture('admin:login')
