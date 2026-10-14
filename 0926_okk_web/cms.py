@@ -188,9 +188,11 @@ def create_app(data_dir=None):
 
     @app.get('/api/projects')
     def public_projects():
-        query = 'SELECT published FROM projects WHERE published IS NOT NULL AND trashed=0 ORDER BY position,id'
+        query = 'SELECT id,published FROM projects WHERE published IS NOT NULL AND trashed=0 ORDER BY position,id'
+        def public_project(row):
+            return {**json.loads(row['published']), 'id': row['id']}
         if 'limit' not in request.args and 'offset' not in request.args:
-            return jsonify(projects=[json.loads(row['published']) for row in db().execute(query)])
+            return jsonify(projects=[public_project(row) for row in db().execute(query)])
         try:
             count = int(request.args.get('limit', '10'))
             offset = int(request.args.get('offset', '0'))
@@ -199,7 +201,7 @@ def create_app(data_dir=None):
         if not 1 <= count <= 100 or not 0 <= offset <= 2**31 - 1:
             abort(400, '목록 조회 범위를 확인해주세요.')
         rows = db().execute(query + ' LIMIT ? OFFSET ?', (count + 1, offset)).fetchall()
-        return jsonify(projects=[json.loads(row['published']) for row in rows[:count]],
+        return jsonify(projects=[public_project(row) for row in rows[:count]],
                        next_offset=offset + count if len(rows) > count else None)
 
     @app.get('/api/admin/projects')

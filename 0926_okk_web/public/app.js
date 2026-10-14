@@ -11,6 +11,7 @@ import { setupHero } from './site/hero.js';
 import { setupContact } from './site/contact.js';
 import { setupNavigation, updateNavigation } from './site/navigation.js';
 import { setupReveals } from './site/reveal.js';
+import { setupProjectTracking, trackPageView } from './site/analytics.js';
 
 const redirectedPath = new URLSearchParams(location.search).get('path');
 if (redirectedPath) history.replaceState({}, '', sitePath(redirectedPath));
@@ -52,9 +53,12 @@ function render() {
         }
     }
     if (path === '/' || (path.startsWith('/works/') && !worksFeed.findProject(path))) loadProjects();
+    // Wait for an uncached detail to resolve so its first view uses the final title.
+    if (!path.startsWith('/works/') || !projects.state.loading || worksFeed.findProject(path)) trackPageView();
 }
 
 setupContact(document.querySelector('#contact'));
+setupProjectTracking({ projects, worksFeed });
 setupNavigation({ main, render });
 decorateNavigation();
 document.addEventListener('click', event => {

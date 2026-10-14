@@ -21,9 +21,12 @@ class ProjectPaginationTests(unittest.TestCase):
                 self.assertEqual(response.status_code, 200)
                 self.assertEqual(len(response.json['projects']), size)
                 self.assertEqual(response.json['next_offset'], next_offset)
+                self.assertTrue(all(project['id'] for project in response.json['projects']))
                 collected.extend(p['slug'] for p in response.json['projects'])
             self.assertEqual(collected, [f'project-{index:02}' for index in range(1, 24)])
-            self.assertEqual(len(client.get('/api/projects').json['projects']), 23)
+            all_projects = client.get('/api/projects').json['projects']
+            self.assertEqual(len(all_projects), 23)
+            self.assertEqual(all_projects[6]['id'], '7')
             self.assertEqual(client.get('/api/projects?limit=10&offset=23').json, {'projects': [], 'next_offset': None})
             for query in ['limit=0', 'limit=101', 'limit=bad', 'offset=-1', 'offset=2147483648']:
                 self.assertEqual(client.get('/api/projects?' + query).status_code, 400)
