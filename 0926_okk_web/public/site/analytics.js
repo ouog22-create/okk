@@ -1,6 +1,7 @@
 import { normalizeSitePath } from '../shared/paths.js';
 
 const MEASUREMENT_ID = 'G-H0HPRR40E7';
+const IS_LOCAL = ['localhost', '127.0.0.1'].includes(location.hostname);
 let lastPageUrl;
 
 function pageUrl() {
@@ -8,6 +9,7 @@ function pageUrl() {
 }
 
 export function trackPageView() {
+    if (IS_LOCAL) return;
     const url = pageUrl();
     if (url === lastPageUrl) return;
     const referrer = lastPageUrl || document.referrer;
@@ -21,6 +23,7 @@ export function trackPageView() {
 }
 
 export function setupProjectTracking({ projects, worksFeed }) {
+    if (IS_LOCAL) return;
     function onProjectClick(event) {
         if (event.type === 'click' && event.button !== 0) return;
         if (event.type === 'auxclick' && event.button !== 1) return;

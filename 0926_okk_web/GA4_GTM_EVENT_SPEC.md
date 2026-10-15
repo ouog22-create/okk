@@ -63,7 +63,7 @@ GTM을 추가로 쓰려면 컨테이너 ID와 태그 소유 방식을 정해야 
 
 ## 페이지뷰와 계측 범위
 
-- Google tag는 **공개 페이지에만** 로드한다. `/admin/`와 관리자 미리보기에는 태그가 없고, `localhost` 및 `127.0.0.1`에서는 태그를 로드하지 않는다.
+- Google tag는 공개 페이지의 HTML `<head>`에 설치한다. `/admin/`와 관리자 미리보기에는 태그가 없다. `localhost` 및 `127.0.0.1`에서는 스크립트 파일이 로드될 수 있지만 GA4를 초기화하거나 이벤트를 보내지 않는다.
 - `send_page_view: false`로 태그 자체의 자동 페이지뷰를 끄고, 초기 렌더와 `pushState`/`popstate`로 실제 화면이 바뀐 뒤 앱에서 `page_view`를 1회 보낸다. 데이터 로딩으로 같은 화면을 다시 그리거나 해시만 바뀌면 보내지 않는다.
 - **GA4 관리 화면에서 추가 설정 필요:** 관리자 → 데이터 스트림 → 웹 스트림 → 향상된 측정 → 페이지 조회수의 고급 설정에서 **‘브라우저 기록 이벤트 기반 페이지 변경’**을 끈다. 이 설정이 켜져 있으면 `send_page_view: false`를 사용해도 내부 전환에서 자동 페이지뷰가 발생해 앱의 수동 이벤트와 중복된다. 첫 외부 유입의 참조 정보와 UTM은 최초 URL에서 수집되게 둔다. [GA4 수동 페이지뷰 안내](https://developers.google.com/analytics/devguides/collection/ga4/views)
 - `/works/{slug}`에 직접 진입하면 게시물 상세 `page_view`만 기록하고 `select_content`는 보내지 않는다. 다른 슬러그에서 현재 슬러그로 정규화하는 `replaceState`는 추가 조회로 세지 않는다.

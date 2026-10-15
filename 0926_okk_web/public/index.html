@@ -2,6 +2,17 @@
 <html lang="ko">
 
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-H0HPRR40E7"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        // The SPA sends page_view after each route has rendered.
+        if (!['localhost', '127.0.0.1'].includes(location.hostname)) {
+            gtag('js', new Date());
+            gtag('config', 'G-H0HPRR40E7', { send_page_view: false });
+        }
+    </script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="theme-color" content="#004EEA">
@@ -15,19 +26,6 @@
     <link rel="stylesheet" href="/styles/contact.css">
     <link rel="stylesheet" href="/styles/reveal.css">
 
-    <script>
-        // The SPA sends page_view after each route has rendered.
-        if (!['localhost', '127.0.0.1'].includes(location.hostname)) {
-            window.dataLayer = window.dataLayer || [];
-            window.gtag = function () { window.dataLayer.push(arguments); };
-            window.gtag('js', new Date());
-            window.gtag('config', 'G-H0HPRR40E7', { send_page_view: false });
-            const googleTag = document.createElement('script');
-            googleTag.async = true;
-            googleTag.src = 'https://www.googletagmanager.com/gtag/js?id=G-H0HPRR40E7';
-            document.head.append(googleTag);
-        }
-    </script>
     <script type="module" src="/app.js"></script>
 </head>
 
