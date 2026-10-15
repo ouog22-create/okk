@@ -134,6 +134,23 @@ header>div {
     align-items: center;
 }
 
+.analytics-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 10px 16px;
+    border: 1px solid var(--blue);
+    border-radius: 12px;
+    color: var(--blue);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.analytics-link:hover {
+    background: var(--blue);
+    color: white;
+}
+
 main {
     max-width: 1440px;
     margin: auto;
@@ -694,6 +711,7 @@ dialog::backdrop {
     header>div {
         gap: 10px;
         font-size: 12px;
+        flex-wrap: wrap;
     }
 
     main {
