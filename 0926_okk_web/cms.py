@@ -9,6 +9,8 @@ import sqlite3
 import time
 import warnings
 from pathlib import Path
+from urllib.parse import quote
+from xml.etree.ElementTree import Element, SubElement, tostring
 from flask import Flask, abort, g, jsonify, request, send_from_directory, send_file
 from werkzeug.exceptions import HTTPException
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -392,6 +394,38 @@ def create_app(data_dir=None):
     @app.get('/admin/')
     def admin_page():
         return send_from_directory(ROOT / 'public/admin', 'index.html')
+
+    @app.get('/robots.txt')
+    def robots():
+        public_origin = origin or 'https://studio-okk.com'
+        return app.response_class(
+            'User-agent: *\n'
+            'Disallow: /admin\n'
+            'Disallow: /api/admin\n'
+            'Disallow: /okk/admin\n'
+            f'\nSitemap: {public_origin}/sitemap.xml\n',
+            mimetype='text/plain',
+        )
+
+    @app.get('/sitemap.xml')
+    def sitemap():
+        public_origin = origin or 'https://studio-okk.com'
+        paths = ['/', '/about', '/works']
+        rows = db().execute(
+            'SELECT published FROM projects WHERE published IS NOT NULL AND trashed=0 ORDER BY position,id'
+        )
+        for row in rows:
+            slug = json.loads(row['published']).get('slug')
+            if slug:
+                paths.append('/works/' + quote(slug, safe=''))
+        root = Element('urlset', xmlns='http://www.sitemaps.org/schemas/sitemap/0.9')
+        for path in dict.fromkeys(paths):
+            SubElement(SubElement(root, 'url'), 'loc').text = public_origin + path
+        return app.response_class(
+            tostring(root, encoding='utf-8', xml_declaration=True),
+            mimetype='application/xml',
+            headers={'Cache-Control': 'no-store'},
+        )
 
     @app.get('/')
     @app.get('/okk/')
