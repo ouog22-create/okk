@@ -34,7 +34,7 @@ function render() {
         main.innerHTML = homePage(projects.state, clients.state);
         const hero = main.querySelector('.hero');
         hero.after(header);
-        document.title = 'STUDIO OKK — A little different. A lot of fun.';
+        document.title = '스튜디오 오키키 | STUDIO OKK';
         cleanup = setupHero(hero);
     } else if (path === '/works') {
         main.innerHTML = worksPage();
